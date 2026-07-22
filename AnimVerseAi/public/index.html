@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AnimVerse AI – Intelligent Prompt-to-Animation Platform</title>
+  <meta name="description" content="Transform your stories into stunning animated videos with AnimVerse AI. Enter a text prompt and watch AI generate characters, scenes, voices, and animations instantly." />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎬</text></svg>" />
+
+  <style>
+    /* ── Marquee / Ticker ── */
+    .ticker-wrap {
+      background: linear-gradient(90deg, var(--primary-dark), var(--primary), var(--accent));
+      padding: 10px 0;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    .ticker-inner {
+      display: inline-block;
+      animation: ticker 30s linear infinite;
+      color: white;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+    .ticker-item { display: inline-block; margin: 0 40px; }
+    .ticker-item i { margin-right: 8px; }
+    @keyframes ticker {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* ── Section Backgrounds ── */
+    .section-alt { background: var(--light-bg); }
+    .section-white { background: white; }
+
+    /* ── Story Category Tabs ── */
+    .category-tabs {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 40px;
+    }
+    .cat-tab {
+      padding: 10px 24px;
+      border-radius: 50px;
+      border: 2px solid var(--border);
+      background: white;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .cat-tab.active, .cat-tab:hover {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      border-color: transparent;
+      box-shadow: 0 4px 16px rgba(230,57,70,0.30);
+      transform: translateY(-2px);
+    }
+
+    /* ── How It Works ── */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 24px;
+      position: relative;
+    }
+    .step-card {
+      text-align: center;
+      padding: 36px 24px;
+      position: relative;
+    }
+    .step-number {
+      width: 52px; height: 52px;
+      background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+      color: var(--text-primary);
+      border-radius: 50%;
+      font-size: 1.2rem;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      box-shadow: 0 6px 20px rgba(255,214,10,0.40);
+    }
+    .step-icon {
+      font-size: 2.4rem;
+      margin-bottom: 16px;
+    }
+    .step-title { font-size: 1rem; font-weight: 700; margin-bottom: 10px; }
+    .step-desc { font-size: 0.875rem; color: var(--text-secondary); }
+
+    .step-connector {
+      position: absolute;
+      top: 56px;
+      right: -12px;
+      color: var(--secondary-dark);
+      font-size: 1.4rem;
+      z-index: 1;
+    }
+
+    /* ── Popular Books ── */
+    .books-scroll {
+      display: flex;
+      gap: 24px;
+      overflow-x: auto;
+      padding-bottom: 16px;
+      scrollbar-width: thin;
+    }
+    .books-scroll::-webkit-scrollbar { height: 4px; }
+    .books-scroll::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
+
+    .book-card {
+      flex: 0 0 200px;
+      background: white;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+      transition: var(--transition);
+    }
+    .book-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); }
+    .book-cover {
+      height: 240px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+    }
+    .book-info { padding: 14px 14px 18px; }
+    .book-title { font-size: 0.88rem; font-weight: 700; margin-bottom: 4px; line-height: 1.3; }
+    .book-author { font-size: 0.75rem; color: var(--text-muted); }
+    .book-genre { font-size: 0.7rem; color: var(--primary); font-weight: 600; margin-top: 6px; }
+
+    /* ── Stats Banner ── */
+    .stats-banner {
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+      padding: 56px 0;
+      color: white;
+    }
+    .stats-inner {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      text-align: center;
+    }
+    .stat-banner-num {
+      font-size: 2.4rem;
+      font-weight: 900;
+      color: var(--secondary);
+      display: block;
+    }
+    .stat-banner-label { font-size: 0.88rem; opacity: 0.80; }
+
+    /* ── Templates Visual ── */
+    .template-visual {
+      height: 160px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3.5rem;
+      border-radius: var(--radius-md) var(--radius-md) 0 0;
+    }
+
+    /* ── FAQ ── */
+    .faq-list { max-width: 720px; margin: 0 auto; }
+    .faq-item {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+    .faq-question {
+      padding: 20px 24px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: var(--transition);
+    }
+    .faq-question:hover { background: var(--light-bg); color: var(--primary); }
+    .faq-question.open { color: var(--primary); background: #FFF8E7; }
+    .faq-question .faq-icon { transition: transform 0.3s ease; }
+    .faq-question.open .faq-icon { transform: rotate(180deg); }
+    .faq-answer {
+      padding: 0 24px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, padding 0.3s ease;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+    .faq-answer.open { max-height: 200px; padding: 0 24px 20px; }
+
+    @media (max-width: 768px) {
+      .stats-inner { grid-template-columns: repeat(2, 1fr); }
+      .step-connector { display: none; }
+    }
+    @media (max-width: 480px) {
+      .stats-inner { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Page Loader ── -->
+<div class="page-loader" id="pageLoader">
+  <div class="loader-logo">🎬</div>
+  <div class="loader-spinner" style="margin-top:16px;"></div>
+</div>
+
+<!-- ── Ticker Bar ── -->
+<div class="ticker-wrap">
+  <div class="ticker-inner">
+    <span class="ticker-item">🎬 AI-Powered Animation &nbsp;•</span>
+    <span class="ticker-item">📖 10,000+ Stories in Library &nbsp;•</span>
+    <span class="ticker-item">🎙️ Smart Voice Generation &nbsp;•</span>
+    <span class="ticker-item">🎵 Emotion-Based Music &nbsp;•</span>
+    <span class="ticker-item">🎨 7 Animation Styles &nbsp;•</span>
+    <span class="ticker-item">📥 Download MP4 & PDF Storyboard &nbsp;•</span>
+    <span class="ticker-item">🌍 Multilingual Support Coming Soon &nbsp;•</span>
+    <span class="ticker-item">🎬 AI-Powered Animation &nbsp;•</span>
+    <span class="ticker-item">📖 10,000+ Stories in Library &nbsp;•</span>
+    <span class="ticker-item">🎙️ Smart Voice Generation &nbsp;•</span>
+    <span class="ticker-item">🎵 Emotion-Based Music &nbsp;•</span>
+    <span class="ticker-item">🎨 7 Animation Styles &nbsp;•</span>
+    <span class="ticker-item">📥 Download MP4 & PDF Storyboard &nbsp;•</span>
+    <span class="ticker-item">🌍 Multilingual Support Coming Soon &nbsp;•</span>
+  </div>
+</div>
+
+<!-- ── Navbar ── -->
+<nav class="navbar" id="navbar">
+  <div class="navbar-inner">
+    <a href="index.html" class="navbar-brand">
+      <img src="images/logo.png" alt="AnimVerse AI Logo" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+      <div style="display:none;width:44px;height:44px;background:linear-gradient(135deg,#E63946,#FF9F1C);border-radius:12px;align-items:center;justify-content:center;color:white;font-size:1.4rem;">🎬</div>
+      <div class="brand-text">
+        <div class="brand-name">AnimVerse AI</div>
+        <div class="brand-tagline">Prompt → Animation</div>
+      </div>
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#library">Story Library</a></li>
+      <li><a href="#how-it-works">How It Works</a></li>
+      <li><a href="#templates">Templates</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+
+    <div class="nav-actions">
+      <a href="login.html" class="btn btn-outline btn-sm">Login</a>
+      <a href="register.html" class="btn btn-primary btn-sm">Get Started Free</a>
+    </div>
+
+    <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<!-- ── Mobile Menu ── -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html">🏠 Home</a>
+  <a href="#features">✨ Features</a>
+  <a href="#library">📚 Story Library</a>
+  <a href="#how-it-works">⚙️ How It Works</a>
+  <a href="#templates">🎨 Templates</a>
+  <a href="#faq">❓ FAQ</a>
+  <div class="mobile-actions">
+    <a href="login.html" class="btn btn-outline">Login</a>
+    <a href="register.html" class="btn btn-primary">Get Started Free</a>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     HERO SECTION
+══════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-bg-shapes">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+  </div>
+
+  <div class="container">
+    <div class="hero-content">
+      <!-- Left: Text -->
+      <div class="hero-text">
+        <div class="hero-badge">
+          <div class="dot"></div>
+          🚀 AI-Powered Animation Platform — Now Live!
+        </div>
+
+        <h1 class="hero-title">
+          Turn Any Story Into a<br />
+          <span class="highlight">Stunning Animation</span><br />
+          in Minutes
+        </h1>
+
+        <p class="hero-desc">
+          Type your story, paste a book chapter, or pick from our 10,000+ story library.
+          AnimVerse AI handles everything — characters, scenes, voices, music, and exports
+          your animation as a downloadable MP4 video.
+        </p>
+
+        <div class="hero-actions">
+          <a href="register.html" class="btn btn-primary btn-lg">
+            <i class="fas fa-magic"></i> Start Creating Free
+          </a>
+          <a href="#how-it-works" class="btn btn-secondary btn-lg">
+            <i class="fas fa-play-circle"></i> See How It Works
+          </a>
+        </div>
+
+        <div class="hero-stats">
+          <div class="stat-item">
+            <div class="stat-num">50K+</div>
+            <div class="stat-label">Animations Created</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">10K+</div>
+            <div class="stat-label">Stories in Library</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">7</div>
+            <div class="stat-label">Animation Styles</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Image -->
+      <div class="hero-image">
+        <img src="images/hero.png" alt="AnimVerse AI Hero" onerror="this.src='https://via.placeholder.com/600x450/FFD60A/E63946?text=AnimVerse+AI'" />
+
+        <div class="floating-card floating-card-1">
+          <div class="fc-icon">🤖</div>
+          <div>
+            <div style="font-size:0.75rem;color:var(--text-muted);">AI Processing</div>
+            <div>Scene Generated!</div>
+          </div>
+        </div>
+
+        <div class="floating-card floating-card-2">
+          <div class="fc-icon">🎬</div>
+          <div>
+            <div style="font-size:0.75rem;color:var(--text-muted);">Animation Ready</div>
+            <div>Download MP4</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     QUICK PROMPT BOX
+══════════════════════════════════════ -->
+<section class="prompt-section section-white">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:32px;">
+      <div class="section-badge"><i class="fas fa-wand-magic-sparkles"></i> Try It Now</div>
+      <h2 class="section-title">Generate Your First Animation</h2>
+      <p class="section-subtitle">Enter a prompt below and experience the magic of AI storytelling</p>
+    </div>
+
+    <div class="prompt-box">
+      <div style="display:grid;grid-template-columns:1fr auto;gap:16px;align-items:flex-start;">
+        <div>
+          <textarea
+            class="prompt-textarea"
+            id="heroPrompt"
+            placeholder="✨ Try something like: 'A brave little girl discovers a hidden magical garden where flowers can talk and animals hold secret meetings...' or paste any story here."
+          ></textarea>
+
+          <div class="prompt-options">
+            <span style="font-size:0.8rem;color:var(--text-muted);font-weight:600;align-self:center;">Quick prompts:</span>
+            <button class="prompt-option-btn" onclick="setPrompt('A brave rabbit saves the forest from an evil dragon 🐇🐉')">🐇 Rabbit & Dragon</button>
+            <button class="prompt-option-btn" onclick="setPrompt('A little princess finds a magic lamp in the old palace 🏰✨')">👸 Princess Story</button>
+            <button class="prompt-option-btn" onclick="setPrompt('A young astronaut explores an alien planet with friendly creatures 🚀👾')">🚀 Space Adventure</button>
+            <button class="prompt-option-btn" onclick="setPrompt('A mystery detective unravels the secret of the haunted mansion 🔍🏚️')">🔍 Mystery</button>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px;min-width:180px;">
+          <a href="register.html" class="btn btn-primary" style="width:100%;">
+            <i class="fas fa-magic"></i> Generate Animation
+          </a>
+          <select class="form-control" style="font-size:0.82rem;" disabled title="Login to select style">
+            <option>🎨 Cartoon Style</option>
+            <option>🌸 Anime Style</option>
+            <option>🦸 Comic Style</option>
+            <option>🧙 Fantasy Style</option>
+            <option>✨ Pixar Style</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     FEATURES
+══════════════════════════════════════ -->
+<section class="section-padding section-alt" id="features">
+  <div class="container">
+    <div class="text-center" style="margin-bottom:56px;">
+      <div class="section-badge"><i class="fas fa-star"></i> Platform Features</div>
+      <h2 class="section-title">Everything You Need to Create<br /><span>World-Class Animations</span></h2>
+      <p class="section-subtitle">From story generation to final video export — AnimVerse AI handles every step with cutting-edge AI technology.</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🤖</div>
+        <h3 class="feature-title">AI Story Generator</h3>
+        <p class="feature-desc">Enter any prompt and our AI instantly creates a complete story with characters, dialogues, and scenes.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎨</div>
+        <h3 class="feature-title">7 Animation Styles</h3>
+        <p class="feature-desc">Choose from Cartoon, Anime, Comic, Fantasy, Pixar, Cinematic, or Watercolor to match your story's mood.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎙️</div>
+        <h3 class="feature-title">AI Voice Generation</h3>
+        <p class="feature-desc">Generate narrator & character voices with emotions — Happy, Sad, Angry, Excited — in Male, Female, Child, or Elderly tones.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎵</div>
+        <h3 class="feature-title">Smart Background Music</h3>
+        <p class="feature-desc">AI auto-selects emotion-based background music — Adventure, Horror, Romance, Fantasy — based on your story context.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎭</div>
+        <h3 class="feature-title">Character Consistency</h3>
+        <p class="feature-desc">AI maintains character appearance, personality, and voice across all scenes throughout your entire animation.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🌩️</div>
+        <h3 class="feature-title">Contextual Sound FX</h3>
+        <p class="feature-desc">Rain, thunder, fire, ocean, footsteps — AI automatically adds contextual sound effects based on each scene's environment.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📖</div>
+        <h3 class="feature-title">Digital Story Library</h3>
+        <p class="feature-desc">Access 10,000+ curated stories — Children's Tales, Adult Fiction, Educational Books, Novels, and more.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📋</div>
+        <h3 class="feature-title">Storyboard PDF Export</h3>
+        <p class="feature-desc">Download your animation as a professional storyboard PDF with scene images, dialogues, and narrations.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📥</div>
+        <h3 class="feature-title">Multi-Format Download</h3>
+        <p class="feature-desc">Export as MP4 Video, Storyboard PDF, Script Document, or Subtitle SRT file for maximum flexibility.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     HOW IT WORKS
+══════════════════════════════════════ -->
+<section class="section-padding section-white" id="how-it-works">
+  <div class="container">
+    <div class="text-center" style="margin-bottom:56px;">
+      <div class="section-badge"><i class="fas fa-cogs"></i> Simple Process</div>
+      <h2 class="section-title">Create an Animation in<br /><span>4 Easy Steps</span></h2>
+    </div>
+
+    <div class="steps-grid">
+      <div class="step-card card">
+        <div class="step-number">1</div>
+        <div class="step-icon">✍️</div>
+        <h3 class="step-title">Enter Your Prompt</h3>
+        <p class="step-desc">Type your story idea, paste a book passage, upload a text file, or select from our story library.</p>
+        <i class="fas fa-chevron-right step-connector"></i>
+      </div>
+
+      <div class="step-card card">
+        <div class="step-number">2</div>
+        <div class="step-icon">🤖</div>
+        <h3 class="step-title">AI Generates Story</h3>
+        <p class="step-desc">Our AI creates characters, scenes, dialogues, narrations, and identifies emotions for each part of the story.</p>
+        <i class="fas fa-chevron-right step-connector"></i>
+      </div>
+
+      <div class="step-card card">
+        <div class="step-number">3</div>
+        <div class="step-icon">🎛️</div>
+        <h3 class="step-title">Customize Everything</h3>
+        <p class="step-desc">Choose animation style, voice type, music theme, subtitle font, color palette, and transition effects.</p>
+        <i class="fas fa-chevron-right step-connector"></i>
+      </div>
+
+      <div class="step-card card">
+        <div class="step-number">4</div>
+        <div class="step-icon">🎬</div>
+        <h3 class="step-title">Download & Share</h3>
+        <p class="step-desc">Preview your animation, make tweaks, then download your MP4 video, storyboard PDF, and subtitle file.</p>
+      </div>
+    </div>
+
+    <div class="text-center" style="margin-top:48px;">
+      <a href="register.html" class="btn btn-primary btn-lg">
+        <i class="fas fa-rocket"></i> Start Your First Animation Free
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     STATS BANNER
+══════════════════════════════════════ -->
+<section class="stats-banner">
+  <div class="container">
+    <div class="stats-inner">
+      <div>
+        <span class="stat-banner-num" data-count="50000">0</span>
+        <span class="stat-banner-label">Animations Created</span>
+      </div>
+      <div>
+        <span class="stat-banner-num" data-count="10000">0</span>
+        <span class="stat-banner-label">Stories in Library</span>
+      </div>
+      <div>
+        <span class="stat-banner-num" data-count="25000">0</span>
+        <span class="stat-banner-label">Happy Users</span>
+      </div>
+      <div>
+        <span class="stat-banner-num" data-count="98">0</span>
+        <span class="stat-banner-label">% Satisfaction Rate</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     STORY LIBRARY PREVIEW
+══════════════════════════════════════ -->
+<section class="section-padding section-alt" id="library">
+  <div class="container">
+    <div class="text-center" style="margin-bottom:40px;">
+      <div class="section-badge"><i class="fas fa-book-open"></i> Digital Story Library</div>
+      <h2 class="section-title">Explore Our Vast <span>Story Collection</span></h2>
+      <p class="section-subtitle">10,000+ curated stories ready to be transformed into animations</p>
+    </div>
+
+    <div class="category-tabs">
+      <button class="cat-tab active" onclick="filterStories('all', this)">📚 All Stories</button>
+      <button class="cat-tab" onclick="filterStories('fairy', this)">🧚 Fairy Tales</button>
+      <button class="cat-tab" onclick="filterStories('moral', this)">💡 Moral Stories</button>
+      <button class="cat-tab" onclick="filterStories('adventure', this)">⚔️ Adventure</button>
+      <button class="cat-tab" onclick="filterStories('fantasy', this)">🧙 Fantasy</button>
+      <button class="cat-tab" onclick="filterStories('mystery', this)">🔍 Mystery</button>
+      <button class="cat-tab" onclick="filterStories('scifi', this)">🚀 Sci-Fi</button>
+      <button class="cat-tab" onclick="filterStories('romance', this)">❤️ Romance</button>
+    </div>
+
+    <div class="story-grid" id="storyGrid">
+      <!-- Stories injected by JS -->
+    </div>
+
+    <div class="text-center" style="margin-top:48px;">
+      <a href="login.html" class="btn btn-primary btn-lg">
+        <i class="fas fa-book"></i> Browse Full Library
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     POPULAR BOOKS
+══════════════════════════════════════ -->
+<section class="section-padding section-white">
+  <div class="container">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:36px;flex-wrap:wrap;gap:16px;">
+      <div>
+        <div class="section-badge" style="margin-bottom:8px;"><i class="fas fa-fire"></i> Trending Now</div>
+        <h2 class="section-title" style="margin-bottom:0;">Popular Books & Novels</h2>
+      </div>
+      <a href="login.html" class="btn btn-outline">View All Books <i class="fas fa-arrow-right"></i></a>
+    </div>
+
+    <div class="books-scroll" id="booksScroll">
+      <!-- Books injected by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     ANIMATION TEMPLATES
+══════════════════════════════════════ -->
+<section class="section-padding section-alt" id="templates">
+  <div class="container">
+    <div class="text-center" style="margin-bottom:56px;">
+      <div class="section-badge"><i class="fas fa-palette"></i> Animation Templates</div>
+      <h2 class="section-title">Choose Your <span>Animation Style</span></h2>
+      <p class="section-subtitle">Pick from 7 professionally designed styles to bring your story to life</p>
+    </div>
+
+    <div class="templates-grid" id="templatesGrid">
+      <!-- Templates injected by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     TESTIMONIALS
+══════════════════════════════════════ -->
+<section class="section-padding section-white" id="testimonials">
+  <div class="container">
+    <div class="text-center" style="margin-bottom:56px;">
+      <div class="section-badge"><i class="fas fa-heart"></i> User Reviews</div>
+      <h2 class="section-title">Loved by <span>Creators Worldwide</span></h2>
+    </div>
+
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"AnimVerse AI is absolutely incredible! I turned my daughter's bedtime story into a beautiful cartoon animation in just 10 minutes. She was so excited to see her story come alive!"</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">P</div>
+          <div>
+            <div class="testimonial-name">Priya Nair</div>
+            <div class="testimonial-role">Parent & Teacher, Kerala</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"As a YouTuber creating animated content, this tool has saved me weeks of work. The AI voice generation and character consistency features are game-changers!"</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">A</div>
+          <div>
+            <div class="testimonial-name">Arjun Mehta</div>
+            <div class="testimonial-role">Content Creator, Mumbai</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★⭐</div>
+        <p class="testimonial-text">"The story library is amazing — I found classics I read as a child and converted them into animations for my classroom. Students are more engaged than ever before!"</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">S</div>
+          <div>
+            <div class="testimonial-name">Sunita Sharma</div>
+            <div class="testimonial-role">School Teacher, Delhi</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"I'm an aspiring novelist. AnimVerse helped me create a promotional animation for my book launch. The cinematic style made it look incredibly professional!"</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">R</div>
+          <div>
+            <div class="testimonial-name">Rahul Krishnan</div>
+            <div class="testimonial-role">Author & Storyteller</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"The emotion-based music selection is brilliant. When my mystery story gets intense, the music automatically shifts to create the perfect atmosphere. Pure magic!"</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">M</div>
+          <div>
+            <div class="testimonial-name">Maya Patel</div>
+            <div class="testimonial-role">Animation Student</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"We used AnimVerse AI to create animated explainer videos for our NGO's health education campaigns. The impact on rural communities has been phenomenal!"</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">D</div>
+          <div>
+            <div class="testimonial-name">Dr. Deepa Menon</div>
+            <div class="testimonial-role">NGO Director, Bangalore</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     FAQ
+══════════════════════════════════════ -->
+<section class="section-padding section-alt" id="faq">
+  <div class="container">
+    <div class="text-center" style="margin-bottom:48px;">
+      <div class="section-badge"><i class="fas fa-question-circle"></i> FAQ</div>
+      <h2 class="section-title">Frequently Asked <span>Questions</span></h2>
+    </div>
+
+    <div class="faq-list">
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          What is AnimVerse AI? <i class="fas fa-chevron-down faq-icon"></i>
+        </div>
+        <div class="faq-answer">AnimVerse AI is an intelligent prompt-to-animation platform that converts text prompts, stories, books, and novels into fully animated videos using artificial intelligence — including AI-generated images, voices, music, and sound effects.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          Do I need any animation or technical skills? <i class="fas fa-chevron-down faq-icon"></i>
+        </div>
+        <div class="faq-answer">No! AnimVerse AI is designed for everyone. Simply type your story idea or paste any text and the AI handles all the technical work — scene creation, character design, voice generation, and video production.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          How long does it take to generate an animation? <i class="fas fa-chevron-down faq-icon"></i>
+        </div>
+        <div class="faq-answer">A typical 2-5 minute animation takes about 3-8 minutes to generate, depending on the story complexity, number of scenes, and selected animation style.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          What formats can I download? <i class="fas fa-chevron-down faq-icon"></i>
+        </div>
+        <div class="faq-answer">You can download your animation as an MP4 Video, a Storyboard PDF, a Script Document, and a Subtitle file (.srt) for use on various platforms.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          Is AnimVerse AI suitable for children? <i class="fas fa-chevron-down faq-icon"></i>
+        </div>
+        <div class="faq-answer">Absolutely! We have a dedicated Children's Section in our Story Library with Fairy Tales, Moral Stories, Bedtime Stories, and Educational content — all age-appropriate and child-safe.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">
+          Can I use AnimVerse for commercial projects? <i class="fas fa-chevron-down faq-icon"></i>
+        </div>
+        <div class="faq-answer">Yes! Pro and Business plan users get full commercial licensing on all generated animations. Please review our Terms of Service for detailed licensing information.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     CTA SECTION
+══════════════════════════════════════ -->
+<section class="cta-section">
+  <div class="container">
+    <h2>Ready to Bring Your Story to Life?</h2>
+    <p>Join 25,000+ creators who are already making amazing animations with AnimVerse AI</p>
+    <div class="cta-actions">
+      <a href="register.html" class="btn btn-secondary btn-lg">
+        <i class="fas fa-magic"></i> Start Creating Free
+      </a>
+      <a href="login.html" class="btn btn-white btn-lg">
+        <i class="fas fa-sign-in-alt"></i> Login to Dashboard
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     FOOTER
+══════════════════════════════════════ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-brand-name">🎬 AnimVerse AI</div>
+        <p class="footer-brand-desc">The world's most powerful AI-driven prompt-to-animation platform. Transform stories into stunning animated videos in minutes.</p>
+        <div class="footer-socials">
+          <a href="#" class="social-btn"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="social-btn"><i class="fab fa-twitter"></i></a>
+          <a href="#" class="social-btn"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="social-btn"><i class="fab fa-youtube"></i></a>
+          <a href="#" class="social-btn"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Platform</h4>
+        <ul>
+          <li><a href="#">Generate Animation</a></li>
+          <li><a href="#">Story Library</a></li>
+          <li><a href="#">Templates</a></li>
+          <li><a href="#">Pricing</a></li>
+          <li><a href="#">API Access</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Genres</h4>
+        <ul>
+          <li><a href="#">Fairy Tales</a></li>
+          <li><a href="#">Adventure</a></li>
+          <li><a href="#">Mystery</a></li>
+          <li><a href="#">Sci-Fi</a></li>
+          <li><a href="#">Romance</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Contact</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="admin-login.html">Admin Login</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>© 2025 AnimVerse AI. All rights reserved. Built with ❤️ for storytellers everywhere.</p>
+      <p style="opacity:0.4;font-size:0.75rem;">MCA Capstone Project — AnimVerse AI Platform</p>
+    </div>
+  </div>
+</footer>
+
+<!-- ── Scroll to Top ── -->
+<button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+  <i class="fas fa-chevron-up"></i>
+</button>
+
+<!-- ══════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════ -->
+<script>
+  // ── Page Loader ──
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      document.getElementById('pageLoader').classList.add('hidden');
+    }, 800);
+  });
+
+  // ── Navbar Scroll Effect ──
+  window.addEventListener('scroll', () => {
+    const navbar = document.getElementById('navbar');
+    const scrollTop = document.getElementById('scrollTop');
+    if (window.scrollY > 60) {
+      navbar.classList.add('scrolled');
+      scrollTop.classList.add('visible');
+    } else {
+      navbar.classList.remove('scrolled');
+      scrollTop.classList.remove('visible');
+    }
+  });
+
+  // ── Mobile Menu ──
+  function toggleMenu() {
+    const menu = document.getElementById('mobileMenu');
+    const ham = document.getElementById('hamburger');
+    menu.classList.toggle('open');
+    ham.classList.toggle('open');
+  }
+
+  // ── Prompt Quick Fill ──
+  function setPrompt(text) {
+    document.getElementById('heroPrompt').value = text;
+    document.querySelectorAll('.prompt-option-btn').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+  }
+
+  // ── FAQ Accordion ──
+  function toggleFaq(el) {
+    const answer = el.nextElementSibling;
+    const isOpen = el.classList.contains('open');
+    document.querySelectorAll('.faq-question').forEach(q => {
+      q.classList.remove('open');
+      q.nextElementSibling.classList.remove('open');
+    });
+    if (!isOpen) {
+      el.classList.add('open');
+      answer.classList.add('open');
+    }
+  }
+
+  // ── Story Category Filter ──
+  const storiesData = [
+    { id:1, title:"The Brave Little Rabbit", author:"AnimVerse Team", category:"fairy", genre:"Fairy Tale", age:"children", icon:"🐇", color:"#FFD60A", desc:"A tiny rabbit discovers courage when the forest is threatened by a fearsome dragon.", time:"8 min" },
+    { id:2, title:"The Golden Lantern", author:"Folk Tales Press", category:"moral", genre:"Moral Story", age:"children", icon:"🏮", color:"#FF9F1C", desc:"A poor boy's honesty earns him a magical lantern that can fulfill one wish.", time:"6 min" },
+    { id:3, title:"Stars of the Deep Ocean", author:"Marina Blue", category:"adventure", genre:"Adventure", age:"all", icon:"🐬", color:"#4FC3F7", desc:"An oceanographer dives into unexplored underwater caves and discovers a lost civilization.", time:"15 min" },
+    { id:4, title:"The Dragon's Secret Garden", author:"Elara Moonwhisper", category:"fantasy", genre:"Fantasy", age:"teen", icon:"🐉", color:"#CE93D8", desc:"A young mage uncovers a hidden garden guarded by a lonely dragon with a painful past.", time:"12 min" },
+    { id:5, title:"Midnight at Blackwood Manor", author:"A.K. Vortex", category:"mystery", genre:"Mystery", age:"adult", icon:"🏚️", color:"#546E7A", desc:"A detective is called to investigate the mysterious disappearance of a billionaire in a cursed mansion.", time:"20 min" },
+    { id:6, title:"Echo of the Cosmos", author:"Dr. Nebula", category:"scifi", genre:"Sci-Fi", age:"adult", icon:"🚀", color:"#26C6DA", desc:"Earth's last astronaut discovers an alien message that could save — or end — all civilization.", time:"25 min" },
+  ];
+
+  function renderStories(filter = 'all') {
+    const grid = document.getElementById('storyGrid');
+    const filtered = filter === 'all' ? storiesData : storiesData.filter(s => s.category === filter);
+    grid.innerHTML = filtered.map(s => `
+      <div class="story-card" onclick="window.location.href='login.html'">
+        <div class="story-card-cover" style="background:linear-gradient(135deg, ${s.color}30, ${s.color}60);display:flex;align-items:center;justify-content:center;font-size:4rem;">${s.icon}</div>
+        <div class="story-card-body">
+          <div class="story-card-category">${s.genre}</div>
+          <h3 class="story-card-title">${s.title}</h3>
+          <div class="story-card-author">by ${s.author}</div>
+          <p style="font-size:0.82rem;color:var(--text-secondary);line-height:1.5;margin-bottom:12px;">${s.desc}</p>
+          <div class="story-card-meta">
+            <span><i class="fas fa-clock" style="color:var(--primary);"></i> ${s.time}</span>
+            <span><i class="fas fa-users" style="color:var(--secondary-dark);"></i> ${s.age}</span>
+          </div>
+          <div class="story-card-actions">
+            <a href="login.html" class="btn btn-primary btn-sm" style="flex:1;"><i class="fas fa-magic"></i> Animate</a>
+            <a href="login.html" class="btn btn-outline btn-sm"><i class="fas fa-book-open"></i></a>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function filterStories(cat, btn) {
+    document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    renderStories(cat);
+  }
+
+  // ── Books Render ──
+  const booksData = [
+    { title:"Alice in Wonderland", author:"Lewis Carroll", genre:"Fantasy", icon:"🐰", color:"#E8F5E9" },
+    { title:"Treasure Island", author:"R.L. Stevenson", genre:"Adventure", icon:"🏴‍☠️", color:"#FFF3E0" },
+    { title:"The Secret Garden", author:"F. Burnett", genre:"Classic", icon:"🌹", color:"#FCE4EC" },
+    { title:"Journey to the Moon", author:"Jules Verne", genre:"Sci-Fi", icon:"🌙", color:"#E3F2FD" },
+    { title:"Arabian Nights", author:"Anonymous", genre:"Folk Tales", icon:"🕌", color:"#FFF9C4" },
+    { title:"Dracula", author:"Bram Stoker", genre:"Horror", icon:"🧛", color:"#F3E5F5" },
+    { title:"Sherlock Holmes", author:"Arthur Conan Doyle", genre:"Mystery", icon:"🔍", color:"#E0F2F1" },
+    { title:"Little Women", author:"Louisa May Alcott", genre:"Classic", icon:"📖", color:"#FBE9E7" },
+  ];
+
+  function renderBooks() {
+    const scroll = document.getElementById('booksScroll');
+    scroll.innerHTML = booksData.map(b => `
+      <div class="book-card" onclick="window.location.href='login.html'">
+        <div class="book-cover" style="background:${b.color};">${b.icon}</div>
+        <div class="book-info">
+          <div class="book-title">${b.title}</div>
+          <div class="book-author">${b.author}</div>
+          <div class="book-genre">${b.genre}</div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // ── Templates ──
+  const templatesData = [
+    { name:"Kids Cartoon", icon:"🧒", bg:"linear-gradient(135deg,#FFD60A,#FF9F1C)" },
+    { name:"Anime", icon:"🌸", bg:"linear-gradient(135deg,#F48FB1,#CE93D8)" },
+    { name:"Comic Book", icon:"💥", bg:"linear-gradient(135deg,#E63946,#C1121F)" },
+    { name:"Fantasy", icon:"🧙", bg:"linear-gradient(135deg,#7C3AED,#A78BFA)" },
+    { name:"Storybook", icon:"📚", bg:"linear-gradient(135deg,#059669,#34D399)" },
+    { name:"Cinematic", icon:"🎬", bg:"linear-gradient(135deg,#1E3A5F,#2196F3)" },
+    { name:"Watercolor", icon:"🎨", bg:"linear-gradient(135deg,#FF9800,#FFC107)" },
+    { name:"Pixar Style", icon:"✨", bg:"linear-gradient(135deg,#E63946,#FF9F1C)" },
+  ];
+
+  function renderTemplates() {
+    const grid = document.getElementById('templatesGrid');
+    grid.innerHTML = templatesData.map(t => `
+      <div class="template-card" onclick="window.location.href='register.html'">
+        <div class="template-visual" style="background:${t.bg};">${t.icon}</div>
+        <div class="template-card-label">${t.name}</div>
+      </div>
+    `).join('');
+  }
+
+  // ── Counter Animation ──
+  function animateCounters() {
+    document.querySelectorAll('[data-count]').forEach(el => {
+      const target = parseInt(el.dataset.count);
+      const duration = 2000;
+      const step = target / (duration / 16);
+      let current = 0;
+      const timer = setInterval(() => {
+        current += step;
+        if (current >= target) {
+          current = target;
+          clearInterval(timer);
+        }
+        el.textContent = Math.floor(current).toLocaleString() + (el.dataset.count === '98' ? '%' : '+');
+      }, 16);
+    });
+  }
+
+  // ── Intersection Observer for counters ──
+  const statsSection = document.querySelector('.stats-banner');
+  let counted = false;
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting && !counted) {
+        counted = true;
+        animateCounters();
+      }
+    });
+  }, { threshold: 0.3 });
+  if (statsSection) observer.observe(statsSection);
+
+  // ── Init ──
+  renderStories();
+  renderBooks();
+  renderTemplates();
+</script>
+</body>
+</html>

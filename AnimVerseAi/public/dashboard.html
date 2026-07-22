@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard – AnimVerse AI</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎬</text></svg>" />
+  <style>
+    body { background: var(--light-bg); }
+    .coming-soon-page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px 24px;
+    }
+    .cs-icon { font-size: 5rem; margin-bottom: 24px; animation: float 3s ease-in-out infinite; }
+    .cs-title { font-size: 2.2rem; font-weight: 800; margin-bottom: 12px; }
+    .cs-title span { background: linear-gradient(135deg,var(--primary),var(--accent)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .cs-desc { font-size: 1rem; color: var(--text-muted); max-width: 500px; margin: 0 auto 32px; line-height: 1.7; }
+    .user-info-box {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 24px 32px;
+      margin-bottom: 28px;
+      box-shadow: var(--shadow-sm);
+      max-width: 400px;
+      width: 100%;
+    }
+    .user-info-box h3 { font-size: 1rem; font-weight: 700; color: var(--text-primary); margin-bottom: 6px; }
+    .user-info-box p { font-size: 0.85rem; color: var(--text-muted); }
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+  </style>
+</head>
+<body>
+  <div class="coming-soon-page">
+    <div class="cs-icon">🎬</div>
+    <h1 class="cs-title">Dashboard <span>Coming Soon!</span></h1>
+
+    <div class="user-info-box" id="userInfoBox" style="display:none;">
+      <h3>✅ Successfully Logged In!</h3>
+      <p id="userGreeting"></p>
+    </div>
+
+    <p class="cs-desc">
+      You've successfully authenticated! The full dashboard with animation generator,
+      story library, project history, and downloads is under active development.
+    </p>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
+      <a href="index.html" class="btn btn-primary"><i class="fas fa-home"></i> Back to Home</a>
+      <button onclick="logout()" class="btn btn-outline"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    </div>
+  </div>
+  <script>
+    const user = JSON.parse(localStorage.getItem('animverse_user') || 'null');
+    if (!user) { window.location.href = 'login.html'; }
+    else {
+      document.getElementById('userInfoBox').style.display = 'block';
+      document.getElementById('userGreeting').textContent = `Welcome, ${user.name}! (${user.email}) — Role: ${user.role}`;
+    }
+    function logout() {
+      localStorage.removeItem('animverse_token');
+      localStorage.removeItem('animverse_user');
+      window.location.href = 'login.html';
+    }
+  </script>
+</body>
+</html>

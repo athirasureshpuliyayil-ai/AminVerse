@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel – AnimVerse AI</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <style>
+    body { background: #0D0D1A; color: white; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 40px 24px; }
+    .icon { font-size: 4rem; margin-bottom: 20px; }
+    h1 { font-size: 2rem; font-weight: 800; margin-bottom: 10px; color: #FFD60A; }
+    p { color: rgba(255,255,255,0.65); max-width: 480px; margin: 0 auto 28px; line-height: 1.7; }
+    .admin-info { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; padding: 20px 28px; margin-bottom: 24px; max-width: 360px; }
+    .admin-info p { margin: 0; font-size: 0.9rem; color: rgba(255,255,255,0.80); }
+    .btn-admin { padding: 14px 32px; border-radius: 50px; background: linear-gradient(135deg, #E63946, #FF9F1C); color: white; font-weight: 700; border: none; cursor: pointer; font-family: inherit; margin: 4px; font-size: 0.9rem; transition: all 0.3s; }
+    .btn-admin:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(230,57,70,0.40); }
+    .btn-outline-w { padding: 14px 32px; border-radius: 50px; background: transparent; color: white; font-weight: 600; border: 2px solid rgba(255,255,255,0.20); cursor: pointer; font-family: inherit; margin: 4px; font-size: 0.9rem; transition: all 0.3s; }
+    .btn-outline-w:hover { border-color: #FFD60A; color: #FFD60A; }
+  </style>
+</head>
+<body>
+  <div class="icon">🛡️</div>
+  <h1>Admin Panel — Coming Soon</h1>
+  <div class="admin-info" id="adminInfoBox" style="display:none;">
+    <p id="adminGreeting"></p>
+  </div>
+  <p>Admin dashboard is under development. This will include user management, story moderation, analytics, and content control.</p>
+  <div>
+    <button onclick="window.location.href='index.html'" class="btn-admin">Go to Home</button>
+    <button onclick="adminLogout()" class="btn-outline-w">Logout</button>
+  </div>
+  <script>
+    const admin = JSON.parse(localStorage.getItem('animverse_admin') || 'null');
+    if (!admin) { window.location.href = 'admin-login.html'; }
+    else {
+      document.getElementById('adminInfoBox').style.display = 'block';
+      document.getElementById('adminGreeting').textContent = `✅ Logged in as Admin: ${admin.name} (${admin.email})`;
+    }
+    function adminLogout() {
+      localStorage.removeItem('animverse_admin_token');
+      localStorage.removeItem('animverse_admin');
+      window.location.href = 'admin-login.html';
+    }
+  </script>
+</body>
+</html>

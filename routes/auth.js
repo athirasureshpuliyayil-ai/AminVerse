@@ -3,6 +3,7 @@ const router = express.Router();
 const { body, validationResult } = require('express-validator');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const sendEmail = require('../utils/sendEmail');
 
 // Generate JWT Token
 const generateToken = (id, role) => {
@@ -34,6 +35,23 @@ router.post('/register', [
 
     const user = await User.create({ name, email, password });
     const token = generateToken(user._id, user.role);
+
+    // Send Welcome Email
+    try {
+      const message = `
+        <h1>Welcome to AnimVerse AI, ${user.name}!</h1>
+        <p>We are thrilled to have you on board. Start turning your stories into amazing animations today!</p>
+        <p>Head over to your dashboard to get started.</p>
+      `;
+      await sendEmail({
+        email: user.email,
+        subject: 'Welcome to AnimVerse AI! 🎬',
+        html: message
+      });
+    } catch (error) {
+      console.error('Email could not be sent', error);
+      // We still return success even if email fails, so user can login
+    }
 
     res.status(201).json({
       success: true,
@@ -161,11 +179,36 @@ router.post('/forgot-password', [
     user.resetPasswordExpire = Date.now() + 3600000; // 1 hour
     await user.save();
 
-    res.json({
-      success: true,
-      message: 'Password reset link sent to your email!',
-      resetToken // In production, send via email
-    });
+    // Create reset URL (assuming frontend is running on same host)
+    // For localhost, it would be http://localhost:5000/reset-password.html?token=...
+    const resetUrl = `${req.protocol}://${req.get('host')}/reset-password.html?token=${resetToken}`;
+
+    const message = `
+      <h1>You requested a password reset</h1>
+      <p>Please make a PUT request to the following link to reset your password:</p>
+      <a href="${resetUrl}" target="_blank">Reset Password Link</a>
+      <p>If you did not request this, please ignore this email.</p>
+    `;
+
+    try {
+      await sendEmail({
+        email: user.email,
+        subject: 'Password Reset Token - AnimVerse AI',
+        html: message
+      });
+
+      res.json({
+        success: true,
+        message: 'Password reset link sent to your email!'
+      });
+    } catch (error) {
+      console.error('Error sending reset email', error);
+      user.resetPasswordToken = undefined;
+      user.resetPasswordExpire = undefined;
+      await user.save();
+
+      return res.status(500).json({ success: false, message: 'Email could not be sent' });
+    }
   } catch (error) {
     res.status(500).json({ success: false, message: 'Server error', error: error.message });
   }

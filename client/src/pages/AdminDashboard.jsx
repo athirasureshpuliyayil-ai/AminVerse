@@ -43,6 +43,7 @@ export default function AdminDashboard() {
     const token = localStorage.getItem('animverse_admin_token')
 
     if (!savedAdmin || !token) {
+      setLoading(false)
       navigate('/admin-login', { replace: true })
       return
     }
@@ -55,21 +56,14 @@ export default function AdminDashboard() {
           headers: { 'Authorization': `Bearer ${token}` }
         })
         const result = await response.json()
-        setLoading(false)
 
         if (result.success && result.data) {
           setDashData(result.data)
-        } else {
-          if (response.status === 401) {
-            adminLogout()
-          } else {
-            // Keep default mock data if endpoint returns error
-            setLoading(false)
-          }
         }
       } catch (error) {
+        console.warn('API unavailable, using mock admin data:', error)
+      } finally {
         setLoading(false)
-        console.warn('API unavailable, using cached admin data:', error)
       }
     }
 
@@ -77,6 +71,7 @@ export default function AdminDashboard() {
   }, [navigate])
 
   const adminLogout = () => {
+    setLoading(false)
     localStorage.removeItem('animverse_admin_token')
     localStorage.removeItem('animverse_admin')
     navigate('/admin-login', { replace: true })

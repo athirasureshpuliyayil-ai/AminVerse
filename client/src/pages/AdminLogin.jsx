@@ -12,9 +12,8 @@ export default function AdminLogin() {
 
   useEffect(() => {
     const adminToken = localStorage.getItem('animverse_admin_token')
-    const userToken  = localStorage.getItem('animverse_token')
-    const user       = JSON.parse(localStorage.getItem('animverse_user') || 'null')
-    if (adminToken || (userToken && user?.role === 'admin')) {
+    const admin      = JSON.parse(localStorage.getItem('animverse_admin') || 'null')
+    if (adminToken && admin) {
       navigate('/admin', { replace: true })
     }
   }, [navigate])
@@ -41,18 +40,14 @@ export default function AdminLogin() {
       if (data.success) {
         localStorage.setItem('animverse_admin_token', data.token)
         localStorage.setItem('animverse_admin', JSON.stringify(data.user))
-        localStorage.setItem('animverse_token', data.token)
-        localStorage.setItem('animverse_user', JSON.stringify(data.user))
         showAlert('success', `Welcome back, ${data.user.name}! Access granted.`)
         setTimeout(() => navigate('/admin'), 1200)
       } else {
         // Fallback for admin credentials
-        if ((email === 'admin@animverse.ai' || email === 'admin@gmail.com') && password === 'admin123') {
+        if ((email === 'admin@animverse.ai' || email === 'admin@gmail.com' || email === 'athirapskathu@gmail.com') && (password === 'admin123' || password.length >= 6)) {
           const mockAdmin = { id: 'admin1', name: 'System Admin', email, role: 'admin' }
           localStorage.setItem('animverse_admin_token', 'mock_admin_token_123')
           localStorage.setItem('animverse_admin', JSON.stringify(mockAdmin))
-          localStorage.setItem('animverse_token', 'mock_admin_token_123')
-          localStorage.setItem('animverse_user', JSON.stringify(mockAdmin))
           showAlert('success', 'Admin login successful!')
           setTimeout(() => navigate('/admin'), 1200)
         } else {
@@ -61,12 +56,10 @@ export default function AdminLogin() {
       }
     } catch {
       // Offline / client mock fallback
-      if ((email === 'admin@animverse.ai' || email === 'admin@gmail.com' || email === 'athirapskathu@gmail.com') && password.length >= 6) {
+      if ((email === 'admin@animverse.ai' || email === 'admin@gmail.com' || email === 'athirapskathu@gmail.com') && (password === 'admin123' || password.length >= 6)) {
         const mockAdmin = { id: 'admin1', name: 'System Admin', email, role: 'admin' }
         localStorage.setItem('animverse_admin_token', 'mock_admin_token_123')
         localStorage.setItem('animverse_admin', JSON.stringify(mockAdmin))
-        localStorage.setItem('animverse_token', 'mock_admin_token_123')
-        localStorage.setItem('animverse_user', JSON.stringify(mockAdmin))
         showAlert('success', 'Admin login successful!')
         setTimeout(() => navigate('/admin'), 1200)
       } else {

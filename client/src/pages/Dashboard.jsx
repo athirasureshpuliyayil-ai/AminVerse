@@ -1,405 +1,156 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import AppSidebar from '../components/AppSidebar'
+import AppHeader from '../components/AppHeader'
 
 export default function Dashboard() {
   const navigate = useNavigate()
   const [user, setUser] = useState(null)
-  const [activeTab, setActiveTab] = useState('overview')
-  const [loading, setLoading] = useState(true)
-  const [dashData, setDashData] = useState({
-    stats: { totalProjects: 0, totalStories: 0, downloads: 0 },
-    myProjects: [],
-    myStories: []
-  })
 
   useEffect(() => {
-    const savedUser = JSON.parse(localStorage.getItem('animverse_user') || 'null')
+    const saved = JSON.parse(localStorage.getItem('animverse_user') || 'null')
     const token = localStorage.getItem('animverse_token')
-
-    if (!savedUser || !token) {
-      navigate('/login')
-      return
-    }
-
-    setUser(savedUser)
-
-    const fetchUserData = async () => {
-      try {
-        const response = await fetch('/api/user/dashboard', {
-          headers: { 'Authorization': `Bearer ${token}` }
-        })
-        const result = await response.json()
-        setLoading(false)
-
-        if (result.success) {
-          setDashData(result.data)
-        } else {
-          if (response.status === 401) {
-            logout()
-          } else {
-            alert('Failed to load data: ' + result.message)
-          }
-        }
-      } catch (error) {
-        setLoading(false)
-        console.error('Error fetching dashboard:', error)
-        alert('An error occurred while fetching data.')
-      }
-    }
-
-    fetchUserData()
+    if (!saved || !token) { navigate('/login'); return }
+    setUser(saved)
   }, [navigate])
 
-  const logout = () => {
-    localStorage.removeItem('animverse_token')
-    localStorage.removeItem('animverse_user')
-    navigate('/login')
-  }
+  const stats = [
+    { label: 'Total Projects', value: 3, icon: '🎬', color: 'var(--primary)', bg: '#FFE0E3' },
+    { label: 'Videos Generated', value: 2, icon: '🎞️', color: 'var(--secondary-dark)', bg: '#FFF9C4' },
+    { label: 'Stories Read', value: 7, icon: '📖', color: 'var(--emerald-dark)', bg: 'var(--emerald-light)' },
+    { label: 'Relaxation Sessions', value: 4, icon: '🎮', color: '#7C3AED', bg: '#F3E5F5' },
+  ]
+
+  const recentProjects = [
+    { id: 'p1', title: 'The Legend of Brave Rabbit', style: 'Kids Cartoon', status: 'completed', thumb: 'https://images.unsplash.com/photo-1511497584788-876761c119ef?w=300&q=70' },
+    { id: 'p2', title: 'Stars of Deep Ocean', style: 'Cinematic', status: 'completed', thumb: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=300&q=70' },
+    { id: 'p3', title: 'Mystery at Blackwood', style: 'Comic Book', status: 'processing', thumb: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=300&q=70' },
+  ]
+
+  const quickGames = [
+    { id: 'memory-match', name: 'Memory Match', icon: '🧠', color: '#FFF9C4' },
+    { id: 'calm-breathing', name: 'Calm Breathing', icon: '🫁', color: 'var(--emerald-light)' },
+    { id: 'puzzle-garden', name: 'Puzzle Garden', icon: '🪴', color: '#DCFCE7' },
+  ]
+
+  if (!user) return null
 
   return (
-    <div className="dash-container">
-      {loading && (
-        <div className="loading-overlay">
-          <div className="spinner-lg" />
-          <div>Loading your workspace...</div>
-        </div>
-      )}
+    <div className="app-shell">
+      <AppSidebar />
+      <main className="app-main">
+        <AppHeader title="My Creative Studio" />
 
-      <aside className="sidebar">
-        <Link to="/" className="brand">
-          🎬 <span>AnimVerse</span>
-        </Link>
-        <a className={`nav-item ${activeTab === 'overview' ? 'active' : ''}`} onClick={() => setActiveTab('overview')}>
-          <i className="fas fa-home" /> Overview
-        </a>
-        <a className={`nav-item ${activeTab === 'projects' ? 'active' : ''}`} onClick={() => setActiveTab('projects')}>
-          <i className="fas fa-video" /> My Projects
-        </a>
-        <a className={`nav-item ${activeTab === 'stories' ? 'active' : ''}`} onClick={() => setActiveTab('stories')}>
-          <i className="fas fa-book-open" /> My Stories
-        </a>
-
-        <button className="btn-logout" onClick={logout}>
-          <i className="fas fa-sign-out-alt" /> Logout
-        </button>
-      </aside>
-
-      <main className="main-content">
-        <header className="header">
-          <h1>Hello, {user ? user.name.split(' ')[0] : 'User'}! 👋</h1>
-          <div className="user-profile">
-            <i className="fas fa-user-astronaut" style={{ fontSize: '1.5rem', color: 'var(--dash-primary)' }} />
-            <span>{user ? user.name : 'User'}</span>
-          </div>
-        </header>
-
-        {/* Tab: Overview */}
-        <div className={`content-container ${activeTab === 'overview' ? 'active' : ''}`}>
-          <div className="stats-grid">
-            <div className="stat-card">
-              <div className="stat-icon" style={{ color: '#38bdf8', background: 'rgba(56, 189, 248, 0.1)' }}>
-                <i className="fas fa-video" />
-              </div>
-              <div className="stat-info">
-                <h3>Total Projects</h3>
-                <p>{dashData.stats.totalProjects}</p>
-              </div>
-            </div>
-            <div className="stat-card">
-              <div className="stat-icon" style={{ color: '#a855f7', background: 'rgba(168, 85, 247, 0.1)' }}>
-                <i className="fas fa-book" />
-              </div>
-              <div className="stat-info">
-                <h3>My Stories</h3>
-                <p>{dashData.stats.totalStories}</p>
-              </div>
-            </div>
-            <div className="stat-card">
-              <div className="stat-icon" style={{ color: '#22c55e', background: 'rgba(34, 197, 94, 0.1)' }}>
-                <i className="fas fa-download" />
-              </div>
-              <div className="stat-info">
-                <h3>Downloads</h3>
-                <p>{dashData.stats.downloads}</p>
-              </div>
-            </div>
-          </div>
-
-          <h2 className="section-title" style={{ marginTop: '40px' }}>Recent Activity</h2>
-          <div className="item-card" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div className="app-content">
+          {/* Welcome Banner */}
+          <div style={{
+            background: 'linear-gradient(135deg, var(--primary), var(--accent), var(--secondary))',
+            borderRadius: 'var(--radius-lg)', padding: '32px', marginBottom: '32px', color: 'white',
+            display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '20px'
+          }}>
             <div>
-              <h4>Welcome to AnimVerse AI!</h4>
-              <p style={{ margin: 0 }}>Start creating amazing animated stories today.</p>
+              <h1 style={{ fontSize: '1.9rem', fontWeight: 800, margin: '0 0 8px' }}>
+                Hello, {user.name.split(' ')[0]}! 👋
+              </h1>
+              <p style={{ opacity: 0.85, margin: 0, fontSize: '1rem' }}>
+                Ready to turn another story into an animated world?
+              </p>
             </div>
-            <Link to="/" className="badge" style={{ background: 'var(--dash-primary)', color: '#000', textDecoration: 'none', padding: '10px 20px' }}>
-              Go to Generator
+            <Link to="/generate" className="btn btn-white btn-lg">
+              <i className="fas fa-magic" /> Start Generating
             </Link>
           </div>
-        </div>
 
-        {/* Tab: My Projects */}
-        <div className={`content-container ${activeTab === 'projects' ? 'active' : ''}`}>
-          <h2 className="section-title">My Animation Projects</h2>
-          <div className="grid-view">
-            {dashData.myProjects.length > 0 ? (
-              dashData.myProjects.map(p => (
-                <div className="item-card" key={p._id || p.id}>
-                  <h4>{p.title}</h4>
-                  <p>Style: {p.animationStyle}</p>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span className={`badge ${p.status === 'completed' ? 'completed' : p.status === 'processing' ? 'processing' : ''}`}>
-                      {p.status}
-                    </span>
-                    <span style={{ fontSize: '0.8rem', color: 'var(--dash-muted)' }}>
-                      {new Date(p.createdAt).toLocaleDateString()}
-                    </span>
-                  </div>
+          {/* Stats Row */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px', marginBottom: '32px' }}>
+            {stats.map((s, i) => (
+              <div key={i} className="card" style={{ padding: '24px', display: 'flex', gap: '16px', alignItems: 'center' }}>
+                <div style={{ width: '52px', height: '52px', borderRadius: '14px', background: s.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.6rem' }}>
+                  {s.icon}
                 </div>
-              ))
-            ) : (
-              <div className="empty-state" style={{ gridColumn: '1 / -1' }}>
-                <i className="fas fa-video-slash" />
-                <p>You haven't created any animation projects yet.</p>
+                <div>
+                  <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{s.label}</div>
+                  <div style={{ fontSize: '2rem', fontWeight: 800, color: s.color }}>{s.value}</div>
+                </div>
               </div>
-            )}
+            ))}
           </div>
-        </div>
 
-        {/* Tab: My Stories */}
-        <div className={`content-container ${activeTab === 'stories' ? 'active' : ''}`}>
-          <h2 className="section-title">My Stories</h2>
-          <div className="grid-view">
-            {dashData.myStories.length > 0 ? (
-              dashData.myStories.map(s => (
-                <div className="item-card" key={s._id || s.id}>
-                  <h4>{s.title}</h4>
-                  <p>Genre: {s.genre || 'N/A'}</p>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span className="badge"><i className="fas fa-eye" /> {s.viewCount || 0}</span>
-                    <span style={{ fontSize: '0.8rem', color: 'var(--dash-muted)' }}>
-                      {new Date(s.createdAt).toLocaleDateString()}
-                    </span>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div className="empty-state" style={{ gridColumn: '1 / -1' }}>
-                <i className="fas fa-book-dead" />
-                <p>You haven't added any stories yet.</p>
+          {/* Two-column grid */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '24px', alignItems: 'start' }}>
+
+            {/* Recent Projects */}
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                <h2 style={{ fontSize: '1.2rem', fontWeight: 700, margin: 0 }}>Recent Projects</h2>
+                <Link to="/projects" style={{ fontSize: '0.85rem', color: 'var(--primary)', fontWeight: 600 }}>View All →</Link>
               </div>
-            )}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                {recentProjects.map(p => (
+                  <div key={p.id} className="card" style={{ padding: '16px', display: 'flex', gap: '16px', alignItems: 'center' }}>
+                    <img src={p.thumb} alt={p.title} style={{ width: '80px', height: '60px', borderRadius: '8px', objectFit: 'cover' }} />
+                    <div style={{ flex: 1 }}>
+                      <h4 style={{ margin: '0 0 4px', fontSize: '1rem' }}>{p.title}</h4>
+                      <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--text-muted)' }}>{p.style}</p>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'flex-end' }}>
+                      <span className={`badge ${p.status === 'completed' ? 'badge-green' : 'badge-yellow'}`}>{p.status}</span>
+                      <Link to="/generate" style={{ fontSize: '0.78rem', color: 'var(--primary)', fontWeight: 600 }}>Continue →</Link>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Quick Actions */}
+              <div style={{ display: 'flex', gap: '12px', marginTop: '20px', flexWrap: 'wrap' }}>
+                <Link to="/generate" className="btn btn-primary"><i className="fas fa-plus" /> New Animation</Link>
+                <Link to="/stories" className="btn btn-secondary"><i className="fas fa-book-open" /> Browse Stories</Link>
+                <Link to="/relax" className="btn btn-emerald"><i className="fas fa-gamepad" /> Relax & Play</Link>
+              </div>
+            </div>
+
+            {/* Right column: Relax + Story Library teaser */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+
+              {/* Relax & Play Widget */}
+              <div className="card" style={{ padding: '24px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
+                  <span style={{ fontSize: '1.5rem' }}>🎮</span>
+                  <h3 style={{ margin: 0, fontSize: '1.1rem' }}>Relax & Play</h3>
+                </div>
+                <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '16px' }}>
+                  Take a quick break. Come back refreshed and creative.
+                </p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  {quickGames.map(g => (
+                    <Link key={g.id} to={`/relax/${g.id}`} className="btn btn-outline btn-sm" style={{ justifyContent: 'flex-start', gap: '10px' }}>
+                      <span style={{ fontSize: '1.1rem' }}>{g.icon}</span> {g.name}
+                    </Link>
+                  ))}
+                </div>
+                <Link to="/relax" style={{ display: 'block', textAlign: 'center', marginTop: '12px', fontSize: '0.82rem', color: 'var(--emerald-dark)', fontWeight: 600 }}>
+                  Explore All 8 Games →
+                </Link>
+              </div>
+
+              {/* Story Library Teaser */}
+              <div className="card" style={{ padding: '24px', background: 'linear-gradient(135deg, var(--light-bg), white)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
+                  <span style={{ fontSize: '1.5rem' }}>📚</span>
+                  <h3 style={{ margin: 0, fontSize: '1.1rem' }}>Story Library</h3>
+                </div>
+                <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '16px' }}>
+                  10,000+ stories — kids, teens & adults.
+                </p>
+                <Link to="/stories" className="btn btn-secondary" style={{ width: '100%' }}>
+                  Browse Stories
+                </Link>
+              </div>
+
+            </div>
           </div>
         </div>
       </main>
-
-      <style>{`
-        :root {
-          --dash-bg: #0b0f19;
-          --dash-card: rgba(255, 255, 255, 0.05);
-          --dash-border: rgba(255, 255, 255, 0.1);
-          --dash-primary: #38bdf8;
-          --dash-accent: #a855f7;
-          --dash-text: #f8fafc;
-          --dash-muted: #94a3b8;
-        }
-        .dash-container {
-          background: var(--dash-bg);
-          color: var(--dash-text);
-          font-family: 'Inter', -apple-system, sans-serif;
-          margin: 0;
-          padding: 0;
-          min-height: 100vh;
-          display: flex;
-          width: 100%;
-        }
-        .sidebar {
-          width: 260px;
-          background: var(--dash-card);
-          border-right: 1px solid var(--dash-border);
-          backdrop-filter: blur(16px);
-          padding: 30px 20px;
-          display: flex;
-          flex-direction: column;
-        }
-        .brand {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-          font-size: 1.5rem;
-          font-weight: 800;
-          color: white;
-          margin-bottom: 40px;
-          text-decoration: none;
-        }
-        .brand span {
-          background: linear-gradient(135deg, var(--dash-primary), var(--dash-accent));
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-        }
-        .nav-item {
-          padding: 12px 16px;
-          border-radius: 8px;
-          color: var(--dash-muted);
-          text-decoration: none;
-          display: flex;
-          align-items: center;
-          gap: 12px;
-          font-weight: 600;
-          margin-bottom: 8px;
-          transition: all 0.3s ease;
-          cursor: pointer;
-        }
-        .nav-item:hover, .nav-item.active {
-          background: rgba(56, 189, 248, 0.1);
-          color: var(--dash-primary);
-        }
-        .main-content {
-          flex: 1;
-          padding: 40px;
-          overflow-y: auto;
-          height: 100vh;
-          background: radial-gradient(circle at top right, rgba(56, 189, 248, 0.05), transparent 40%);
-        }
-        .header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 40px;
-        }
-        .header h1 {
-          font-size: 2rem;
-          font-weight: 700;
-          margin: 0;
-          color: white;
-        }
-        .user-profile {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-          background: var(--dash-card);
-          padding: 8px 16px;
-          border-radius: 50px;
-          border: 1px solid var(--dash-border);
-        }
-        .stats-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-          gap: 20px;
-          margin-bottom: 40px;
-        }
-        .stat-card {
-          background: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
-          border: 1px solid var(--dash-border);
-          border-radius: 20px;
-          padding: 24px;
-          backdrop-filter: blur(10px);
-          display: flex;
-          align-items: center;
-          gap: 20px;
-          transition: transform 0.3s, box-shadow 0.3s;
-        }
-        .stat-card:hover { 
-          transform: translateY(-5px); 
-          box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-          border-color: rgba(255,255,255,0.2); 
-        }
-        .stat-icon {
-          width: 56px;
-          height: 56px;
-          border-radius: 14px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 1.8rem;
-          background: rgba(255, 255, 255, 0.05);
-        }
-        .stat-info h3 { margin: 0; font-size: 0.95rem; color: var(--dash-muted); font-weight: 500; }
-        .stat-info p { margin: 4px 0 0; font-size: 2rem; font-weight: 800; color: white; }
-        
-        .section-title { font-size: 1.4rem; margin-bottom: 20px; color: white; font-weight: 700; }
-        .content-container {
-          background: var(--dash-card);
-          border: 1px solid var(--dash-border);
-          border-radius: 20px;
-          padding: 24px;
-          margin-bottom: 30px;
-          backdrop-filter: blur(10px);
-          display: none;
-        }
-        .content-container.active {
-          display: block;
-          animation: slideUp 0.4s ease-out;
-        }
-        
-        .grid-view {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-          gap: 20px;
-        }
-        
-        .item-card {
-          background: rgba(0,0,0,0.2);
-          border: 1px solid var(--dash-border);
-          border-radius: 16px;
-          padding: 20px;
-          transition: all 0.3s;
-        }
-        .item-card:hover {
-          border-color: var(--dash-primary);
-          background: rgba(56, 189, 248, 0.05);
-        }
-        .item-card h4 { margin: 0 0 8px 0; font-size: 1.1rem; color: white; }
-        .item-card p { margin: 0 0 16px 0; font-size: 0.9rem; color: var(--dash-muted); }
-        .badge {
-          display: inline-block;
-          padding: 4px 10px;
-          border-radius: 50px;
-          font-size: 0.75rem;
-          font-weight: 600;
-          background: rgba(255,255,255,0.1);
-        }
-        .badge.completed { background: rgba(34, 197, 94, 0.15); color: #22c55e; }
-        .badge.processing { background: rgba(245, 158, 11, 0.15); color: #f59e0b; }
-        
-        .btn-logout {
-          margin-top: auto;
-          padding: 12px;
-          border-radius: 10px;
-          background: transparent;
-          color: var(--dash-muted);
-          border: 1px solid var(--dash-border);
-          cursor: pointer;
-          font-weight: 600;
-          transition: all 0.3s;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 8px;
-        }
-        .btn-logout:hover { background: rgba(255,255,255,0.05); color: white; }
-        
-        .loading-overlay {
-          position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-          background: var(--dash-bg);
-          display: flex; align-items: center; justify-content: center;
-          z-index: 1000;
-          color: white; font-size: 1.5rem; flex-direction: column; gap: 16px;
-        }
-        .spinner-lg {
-          width: 40px; height: 40px;
-          border: 4px solid rgba(255,255,255,0.1);
-          border-top-color: var(--dash-primary);
-          border-radius: 50%;
-          animation: spin 1s linear infinite;
-        }
-        
-        .empty-state {
-          text-align: center;
-          padding: 40px 20px;
-          color: var(--dash-muted);
-        }
-        .empty-state i { font-size: 3rem; margin-bottom: 16px; opacity: 0.5; }
-      `}</style>
     </div>
   )
 }

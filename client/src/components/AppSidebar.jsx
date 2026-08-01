@@ -21,7 +21,7 @@ export default function AppSidebar({ collapsed, onToggle }) {
     localStorage.removeItem('animverse_user')
     localStorage.removeItem('animverse_admin_token')
     localStorage.removeItem('animverse_admin')
-    navigate('/')
+    navigate('/login')
   }
 
   const isActive = (path) => location.pathname === path

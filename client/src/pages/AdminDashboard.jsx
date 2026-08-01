@@ -74,7 +74,9 @@ export default function AdminDashboard() {
     setLoading(false)
     localStorage.removeItem('animverse_admin_token')
     localStorage.removeItem('animverse_admin')
-    navigate('/admin-login', { replace: true })
+    localStorage.removeItem('animverse_token')
+    localStorage.removeItem('animverse_user')
+    navigate('/login', { replace: true })
   }
 
   const titles = {

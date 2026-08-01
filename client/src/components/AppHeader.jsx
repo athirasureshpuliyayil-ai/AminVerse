@@ -92,7 +92,7 @@ export default function AppHeader({ title = 'Dashboard' }) {
           <div style={S.avatar}>{(user?.name || 'U')[0].toUpperCase()}</div>
           <div style={S.userMeta}>
             <span style={S.userName}>{(user?.name || 'User').split(' ')[0]}</span>
-            <span style={S.userRole}>{user?.role === 'admin' ? '🛡️ Admin' : '🎨 Creator'}</span>
+            <span style={S.userRole}>🎨 Creator</span>
           </div>
         </div>
       </div>

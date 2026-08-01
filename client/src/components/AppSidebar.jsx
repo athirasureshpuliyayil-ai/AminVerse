@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 
 const NAV = [
@@ -12,21 +11,16 @@ const NAV = [
   { icon:'🎮', label:'Relax & Play',    path:'/relax' },
 ]
 
-const ADMIN_NAV = [
-  { icon:'🛡️', label:'Admin Console',  path:'/admin' },
-  { icon:'👥', label:'Users',           path:'/admin/users' },
-  { icon:'🎮', label:'Games Manager',   path:'/admin/games' },
-]
-
 export default function AppSidebar({ collapsed, onToggle }) {
   const location = useLocation()
   const navigate = useNavigate()
   const user = JSON.parse(localStorage.getItem('animverse_user') || '{}')
-  const isAdmin = user?.role === 'admin'
 
   const logout = () => {
     localStorage.removeItem('animverse_token')
     localStorage.removeItem('animverse_user')
+    localStorage.removeItem('animverse_admin_token')
+    localStorage.removeItem('animverse_admin')
     navigate('/')
   }
 
@@ -115,8 +109,6 @@ export default function AppSidebar({ collapsed, onToggle }) {
     },
   }
 
-  const navList = isAdmin ? [...NAV, ...ADMIN_NAV] : NAV
-
   return (
     <aside style={S.sidebar}>
 
@@ -143,25 +135,12 @@ export default function AppSidebar({ collapsed, onToggle }) {
       {/* Navigation */}
       <nav style={S.navSection}>
         {!collapsed && <span style={S.sectionLabel}>Main Menu</span>}
-        {navList.slice(0, 8).map(item => (
+        {NAV.map(item => (
           <Link key={item.path} to={item.path} style={S.navItem(isActive(item.path))}>
             <span style={S.navIcon}>{item.icon}</span>
             {!collapsed && <span style={S.navLabel(isActive(item.path))}>{item.label}</span>}
           </Link>
         ))}
-
-        {isAdmin && (
-          <>
-            <div style={S.divider} />
-            {!collapsed && <span style={S.sectionLabel}>Admin</span>}
-            {ADMIN_NAV.map(item => (
-              <Link key={item.path} to={item.path} style={S.navItem(isActive(item.path))}>
-                <span style={S.navIcon}>{item.icon}</span>
-                {!collapsed && <span style={S.navLabel(isActive(item.path))}>{item.label}</span>}
-              </Link>
-            ))}
-          </>
-        )}
 
         <div style={S.divider} />
 
@@ -181,7 +160,7 @@ export default function AppSidebar({ collapsed, onToggle }) {
             <div style={S.avatar}>{(user?.name||'?')[0].toUpperCase()}</div>
             <div style={{ overflow: 'hidden' }}>
               <div style={S.userName}>{user?.name || 'User'}</div>
-              <div style={S.userRole}>{user?.role === 'admin' ? '🛡️ Administrator' : '🎨 Creator'}</div>
+              <div style={S.userRole}>🎨 Creator</div>
             </div>
           </div>
         )}

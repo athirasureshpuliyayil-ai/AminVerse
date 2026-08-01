@@ -11,12 +11,7 @@ export default function ProjectHistory() {
   ])
 
   return (
-    <div className="app-shell">
-      <AppSidebar />
-      <main className="app-main">
-        <AppHeader title="My Animation Projects" />
-
-        <div className="app-content">
+    <AppShell title="My Animation Projects">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
             <h1 style={{ fontSize: '1.6rem', fontWeight: 800, margin: 0 }}>Project History ({projects.length})</h1>
             <Link to="/generate" className="btn btn-primary"><i className="fas fa-plus" /> New Project</Link>
@@ -53,8 +48,8 @@ export default function ProjectHistory() {
               </tbody>
             </table>
           </div>
-        </div>
-      </main>
-    </div>
+        </AppShell>
   )
 }
+
+

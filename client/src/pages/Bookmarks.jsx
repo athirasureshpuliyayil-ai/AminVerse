@@ -7,12 +7,7 @@ export default function Bookmarks() {
   const bookmarked = LIBRARY_STORIES.slice(0, 3)
 
   return (
-    <div className="app-shell">
-      <AppSidebar />
-      <main className="app-main">
-        <AppHeader title="Saved & Bookmarked Stories" />
-
-        <div className="app-content">
+    <AppShell title="Saved & Bookmarked Stories">
           <h1 style={{ fontSize: '1.6rem', fontWeight: 800, marginBottom: '24px' }}>Bookmarked Stories ({bookmarked.length})</h1>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '24px' }}>
@@ -30,8 +25,8 @@ export default function Bookmarks() {
               </div>
             ))}
           </div>
-        </div>
-      </main>
-    </div>
+        </AppShell>
   )
 }
+
+

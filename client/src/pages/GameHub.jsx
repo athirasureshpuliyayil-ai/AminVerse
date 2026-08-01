@@ -21,12 +21,7 @@ export default function GameHub() {
   const filteredGames = filter === 'All' ? GAKEDATA : GAKEDATA.filter(g => g.category === filter || g.category === 'Everyone')
 
   return (
-    <div className="app-shell">
-      <AppSidebar />
-      <main className="app-main">
-        <AppHeader title="Relax & Play — Mind Relaxation Hub" />
-
-        <div className="app-content">
+    <AppShell title="Relax & Play — Mind Relaxation Hub">
           {/* Header Banner */}
           <div style={{
             background: 'linear-gradient(135deg, var(--emerald-light), var(--secondary-light))',
@@ -98,8 +93,8 @@ export default function GameHub() {
               </div>
             ))}
           </div>
-        </div>
-      </main>
-    </div>
+        </AppShell>
   )
 }
+
+

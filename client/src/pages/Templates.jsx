@@ -20,12 +20,7 @@ export default function Templates() {
   ]
 
   return (
-    <div className="app-shell">
-      <AppSidebar />
-      <main className="app-main">
-        <AppHeader title="Animation Style Templates" />
-
-        <div className="app-content">
+    <AppShell title="Animation Style Templates">
           <h1 style={{ fontSize: '1.8rem', fontWeight: 800, marginBottom: '8px' }}>11+ Professional Style Presets</h1>
           <p style={{ color: 'var(--text-secondary)', marginBottom: '32px' }}>Choose a pre-configured template to set the aesthetic tone of your animated video.</p>
 
@@ -49,8 +44,8 @@ export default function Templates() {
               </div>
             ))}
           </div>
-        </div>
-      </main>
-    </div>
+        </AppShell>
   )
 }
+
+

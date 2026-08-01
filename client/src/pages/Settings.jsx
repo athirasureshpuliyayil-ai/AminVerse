@@ -12,12 +12,7 @@ export default function Settings() {
   }
 
   return (
-    <div className="app-shell">
-      <AppSidebar />
-      <main className="app-main">
-        <AppHeader title="Account & Studio Settings" />
-
-        <div className="app-content">
+    <AppShell title="Account & Studio Settings">
           <div className="card" style={{ padding: '32px', maxWidth: '600px', margin: '0 auto' }}>
             <h2 style={{ fontSize: '1.4rem', marginBottom: '24px' }}>Appearance & Theme</h2>
 
@@ -56,8 +51,8 @@ export default function Settings() {
               Save Preferences
             </button>
           </div>
-        </div>
-      </main>
-    </div>
+        </AppShell>
   )
 }
+
+

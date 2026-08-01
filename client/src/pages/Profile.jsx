@@ -11,12 +11,7 @@ export default function Profile() {
   }, [])
 
   return (
-    <div className="app-shell">
-      <AppSidebar />
-      <main className="app-main">
-        <AppHeader title="User Profile" />
-
-        <div className="app-content">
+    <AppShell title="User Profile">
           <div className="card" style={{ padding: '32px', maxWidth: '600px', margin: '0 auto' }}>
             <div style={{ textAlign: 'center', marginBottom: '24px' }}>
               <div style={{
@@ -55,8 +50,8 @@ export default function Profile() {
               Save Profile Changes
             </button>
           </div>
-        </div>
-      </main>
-    </div>
+        </AppShell>
   )
 }
+
+

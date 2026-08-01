@@ -9,12 +9,7 @@ export default function Notifications() {
   ]
 
   return (
-    <div className="app-shell">
-      <AppSidebar />
-      <main className="app-main">
-        <AppHeader title="Notifications Inbox" />
-
-        <div className="app-content">
+    <AppShell title="Notifications Inbox">
           <h1 style={{ fontSize: '1.6rem', fontWeight: 800, marginBottom: '24px' }}>Notifications</h1>
 
           <div style={{ display: 'grid', gap: '16px', maxWidth: '700px' }}>
@@ -37,8 +32,8 @@ export default function Notifications() {
               </div>
             ))}
           </div>
-        </div>
-      </main>
-    </div>
+        </AppShell>
   )
 }
+
+

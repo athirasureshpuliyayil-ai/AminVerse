@@ -27,12 +27,7 @@ export default function StoryLibrary() {
   })
 
   return (
-    <div className="app-shell">
-      <AppSidebar />
-      <main className="app-main">
-        <AppHeader title="Digital Story Library" />
-
-        <div className="app-content">
+    <AppShell title="Digital Story Library">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', flexWrap: 'wrap', gap: '16px' }}>
             <div>
               <h1 style={{ fontSize: '1.8rem', fontWeight: 800, margin: 0 }}>Explore 10,000+ Stories & Novels</h1>
@@ -84,8 +79,8 @@ export default function StoryLibrary() {
               </div>
             ))}
           </div>
-        </div>
-      </main>
-    </div>
+        </AppShell>
   )
 }
+
+

@@ -9,12 +9,7 @@ export default function Downloads() {
   ]
 
   return (
-    <div className="app-shell">
-      <AppSidebar />
-      <main className="app-main">
-        <AppHeader title="Downloads & Exports" />
-
-        <div className="app-content">
+    <AppShell title="Downloads & Exports">
           <h1 style={{ fontSize: '1.6rem', fontWeight: 800, marginBottom: '24px' }}>Exported Files</h1>
 
           <div className="card" style={{ padding: '24px' }}>
@@ -45,8 +40,8 @@ export default function Downloads() {
               </tbody>
             </table>
           </div>
-        </div>
-      </main>
-    </div>
+        </AppShell>
   )
 }
+
+

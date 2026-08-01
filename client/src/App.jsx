@@ -5,6 +5,7 @@ import Register from './pages/Register'
 import ForgotPassword from './pages/ForgotPassword'
 import Dashboard from './pages/Dashboard'
 import AdminLogin from './pages/AdminLogin'
+import AdminDashboard from './pages/AdminDashboard'
 import GeneratorWizard from './pages/GeneratorWizard'
 import GameHub from './pages/GameHub'
 import GamePlay from './pages/GamePlay'
@@ -17,7 +18,6 @@ import Templates from './pages/Templates'
 import Profile from './pages/Profile'
 import Settings from './pages/Settings'
 import Notifications from './pages/Notifications'
-import AdminPortal from './pages/AdminPortal'
 
 import PrivateRoute from './components/PrivateRoute'
 import AdminRoute from './components/AdminRoute'
@@ -54,9 +54,9 @@ export default function App() {
 
         {/* Protected Admin Routes */}
         <Route element={<AdminRoute />}>
-          <Route path="/admin" element={<AdminPortal />} />
-          <Route path="/admin-dashboard" element={<AdminPortal />} />
-          <Route path="/admin/*" element={<AdminPortal />} />
+          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin-dashboard" element={<AdminDashboard />} />
+          <Route path="/admin/*" element={<AdminDashboard />} />
         </Route>
 
         {/* Catch-all Fallback */}

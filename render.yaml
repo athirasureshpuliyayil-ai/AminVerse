@@ -3,7 +3,7 @@ services:
     name: aminverse-ai
     env: node
     plan: free
-    buildCommand: npm install && cd client && npm install && npm run build && cd ..
+    buildCommand: npm install && cd client && npm install --include=dev && npx vite build && cd ..
     startCommand: node server.js
     healthCheckPath: /api/health
     envVars:

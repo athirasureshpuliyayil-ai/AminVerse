@@ -5,7 +5,7 @@
 
 ---
 
-## 👥 Team Members & Dedicated Modules
+## 👥 Team Members & Dedicated Architecture Breakdown
 
 ```
                         ┌──────────────────────────────────────────────┐
@@ -14,22 +14,27 @@
                                                │
         ┌──────────────────────┬───────────────┴───────────────┬──────────────────────┐
         │                      │                               │                      │
-┌───────▼────────┐     ┌───────▼────────┐              ┌───────▼────────┐     ┌───────▼────────┐
-│ 1. Athira P S  │     │ 2. Angel Sabu  │              │ 3. Aparna A P  │     │ 4. Aswini M R  │
-│  (Lead & AI)   │     │(Theatre/Games) │              │(Museum/Audio)  │     │(Dashboards/UI) │
-└────────────────┘     └────────────────┘              └────────────────┘     └────────────────┘
+┌───────▼────────────────┐ ┌───▼────────────┐          ┌───────▼────────┐     ┌───────▼────────┐
+│ 1. Athira P S          │ │ 2. Angel Sabu  │          │ 3. Aparna A P  │     │ 4. Aswini M R  │
+│ (Lead, AI & Dashboards)│ │(Theatre/Games) │          │(Museum/Audio)  │     │(UI Utils/Saved)│
+└────────────────────────┘ └────────────────┘          └────────────────┘     └────────────────┘
 ```
 
 ---
 
-### 1. 🧙‍♀️ Athira P S (`athirasureshpuliyayil-ai`) — Lead & Core AI Engine
+### 1. 🧙‍♀️ Athira P S (`athirasureshpuliyayil-ai`) — Lead, Core AI Engine & Multi-Role Dashboards
 * **Branch:** `athirasureshpuliyayil-ai` / `feature/athira-core-ai-engine`
 * **Core Responsibilities:**
-  - Full-Stack Architecture, Node/Express Backend (`server.js`, `package.json`, `render.yaml`).
-  - Google Gemini 3.5 & Pollo AI Multi-Scene Video Synthesis Engine (`routes/generate.js`).
-  - 8Scale Wan 2.2 Text-to-Video Engine & Controllers (`services/wanVideoService.js`, `controllers/videoController.js`, `routes/videoRoutes.js`).
-  - Scene generation pipeline with dynamic prompt conditioning and video pooling (`client/src/services/aiService.js`).
-  - Render Cloud Deployment and Production Build Configuration.
+  - **Full-Stack Core Architecture & Deployment:** Node/Express Backend, Server Lifecycle, and Render Cloud Deployment (`server.js`, `package.json`, `render.yaml`).
+  - **Google Gemini 3.5 & Pollo AI Generative Engine:** Multi-Scene Screenplay Generation, Prompt Analysis, Dialogue Synthesizer, and Video Pooling (`routes/generate.js`, `client/src/services/aiService.js`).
+  - **Wan 2.2 Video Engine Integration:** 8Scale Wan 2.2 Text-to-Video Engine & Controllers (`services/wanVideoService.js`, `controllers/videoController.js`, `routes/videoRoutes.js`).
+  - **All Multi-Role Dashboard Architectures:**
+    - Author Dashboard (`client/src/components/dashboards/AuthorDashboardView.jsx`)
+    - Parent Dashboard & Child Safety Controls (`client/src/components/dashboards/ParentDashboardView.jsx`)
+    - Adult Interactive Workspace (`client/src/components/dashboards/AdultDashboardView.jsx`)
+    - Admin Dashboard & Analytics Monitor (`client/src/pages/AdminDashboard.jsx`, `routes/admin.js`)
+    - Main Central Dashboard (`client/src/pages/Dashboard.jsx`)
+    - Dedicated Role Authentication Gateways (`AuthorLogin.jsx`, `ParentLogin.jsx`, `AdultLogin.jsx`, `AdminLogin.jsx`).
 
 ---
 
@@ -55,14 +60,14 @@
 
 ---
 
-### 4. 📊 ASWINI M R (`aswinimr120z-ux`) — Role Dashboards, Roadmap & UI Experience
+### 4. 🎨 ASWINI M R (`aswinimr120z-ux`) — UI Utilities, Bookmarks & Downloads (Focused Role)
 * **Branch:** `aswinimr120z-ux` / `feature/aswini-dashboards-ui`
 * **Core Responsibilities:**
-  - Role-Specific Dashboard Views for Authors, Parents, Adults, and Admins (`client/src/components/dashboards/`).
-  - Dedicated Multi-Role Authentication Portals (`AuthorLogin.jsx`, `ParentLogin.jsx`, `AdultLogin.jsx`, `AdminLogin.jsx`).
-  - Interactive Project Roadmap & Milestones (`client/src/pages/ProjectRoadmap.jsx`).
-  - My Stories, Bookmarks & Offline Downloads Management (`client/src/pages/MyStories.jsx`, `client/src/pages/Bookmarks.jsx`, `client/src/pages/Downloads.jsx`).
-  - App Shell, Dynamic Sidebar Navigation, and Global Responsive Theme System (`AppShell.jsx`, `AppSidebar.jsx`, `AppHeader.jsx`, `Navbar.jsx`, `index.css`).
+  - Bookmarks & Saved Story Collections (`client/src/pages/Bookmarks.jsx`).
+  - Offline Downloads Management (`client/src/pages/Downloads.jsx`).
+  - Project Roadmap & Visual Milestone Tracker (`client/src/pages/ProjectRoadmap.jsx`).
+  - User Profile & Notification Center (`client/src/pages/Profile.jsx`, `client/src/pages/Notifications.jsx`, `client/src/pages/Settings.jsx`).
+  - Navigation styling refinements & basic UI layout components (`client/src/components/Navbar.jsx`, `client/src/components/AppHeader.jsx`).
 
 ---
 

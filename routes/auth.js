@@ -58,22 +58,14 @@ router.post('/register', [
 
     const token = generateToken(user._id, user.role);
 
-    // Send Welcome Email
-    try {
-      const message = `
-        <h1>Welcome to AnimVerse AI, ${user.name}!</h1>
-        <p>We are thrilled to have you on board. Start turning your stories into amazing animations today!</p>
-      `;
-      await sendEmail({
-        email: user.email,
-        subject: 'Welcome to AnimVerse AI! 🎬',
-        html: message
-      });
-    } catch (emailErr) {
-      // ignore email sending errors
-    }
+    // Send Welcome Email asynchronously without blocking response
+    sendEmail({
+      email: user.email,
+      subject: 'Welcome to AnimVerse AI! 🎬',
+      html: `<h1>Welcome to AnimVerse AI, ${user.name}!</h1><p>We are thrilled to have you on board. Start turning your stories into amazing animations today!</p>`
+    }).catch(err => console.warn('Welcome email notice:', err.message));
 
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       message: 'Registration successful!',
       token,
@@ -86,7 +78,7 @@ router.post('/register', [
     });
   } catch (error) {
     console.error('Registration error:', error);
-    res.status(500).json({ success: false, message: 'Server error', error: error.message });
+    return res.status(400).json({ success: false, message: error.message || 'Registration failed' });
   }
 });
 

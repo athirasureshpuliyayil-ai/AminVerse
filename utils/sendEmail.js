@@ -41,9 +41,13 @@ const sendEmail = async (options) => {
   const info = await transporter.sendMail(message);
   console.log('✅ Message sent: %s', info.messageId);
 
+  if (options.resetUrl) {
+    console.log('🔗 Direct Password Reset Link: %s', options.resetUrl);
+  }
+
   // If using ethereal, log the URL to view the email
   if (testAccount) {
-    console.log('📧 Preview URL: %s', nodemailer.getTestMessageUrl(info));
+    console.log('📧 Ethereal Preview URL: %s', nodemailer.getTestMessageUrl(info));
   }
 };
 

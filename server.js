@@ -24,6 +24,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/admin', require('./routes/admin'));
 app.use('/api/user', require('./routes/user'));
+app.use('/api/generate', require('./routes/generate'));
+app.use('/api/stories', require('./routes/stories'));
+app.use('/api/projects', require('./routes/projects'));
+app.use('/api/video', require('./routes/videoRoutes'));
+app.use('/api/radio', require('./routes/radio'));
+app.use('/api/museum', require('./routes/museum'));
+app.use('/api/spotify', require('./routes/spotify'));
+app.use('/api/theatre', require('./routes/theatre'));
 
 // Health check
 app.get('/api/health', (req, res) => {

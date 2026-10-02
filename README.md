@@ -16,6 +16,14 @@ Edit `.env` file:
 - **Without Auth (Default):** `MONGO_URI=mongodb://localhost:27017/capstoneproject`
 - **With Auth (athira/athira123):** `MONGO_URI=mongodb://athira:athira123@localhost:27017/capstoneproject?authSource=admin`
 
+### Spotify Music Search
+Create an app in the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard), then add these values to the project-root `.env` file:
+```env
+SPOTIFY_CLIENT_ID=your_client_id
+SPOTIFY_CLIENT_SECRET=your_client_secret
+```
+Restart the backend after editing `.env`. The secret stays on the server. Music search uses the selected language's Spotify market (GB for English, IN for Malayalam and Hindi), and playback is provided by Spotify's embedded player. Without credentials, the Music page still offers a direct Spotify search link.
+
 ### 3. Start Server
 ```bash
 node server.js
@@ -105,3 +113,4 @@ AnimVerseAi/
 | GET | `/api/auth/me` | Get current user |
 | POST | `/api/auth/seed-admin` | Create first admin |
 | GET | `/api/health` | Server health check |
+| GET | `/api/spotify/search?q=Broken%20Angel&language=English` | Search Spotify tracks for the selected language market |

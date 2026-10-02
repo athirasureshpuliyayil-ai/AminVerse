@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom'
-import AppSidebar from '../components/AppSidebar'
-import AppHeader from '../components/AppHeader'
+import AppShell from '../components/AppShell'
 import { LIBRARY_STORIES } from './StoryLibrary'
 
 export default function Bookmarks() {

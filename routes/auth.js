@@ -26,14 +26,15 @@ router.post('/register', [
   }
 
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, role } = req.body;
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ success: false, message: 'User already exists with this email' });
     }
 
-    const user = await User.create({ name, email, password });
+    const assignedRole = ['parent', 'adult', 'author', 'user'].includes(role) ? role : 'user';
+    const user = await User.create({ name, email, password, role: assignedRole });
     const token = generateToken(user._id, user.role);
 
     // Send Welcome Email
@@ -165,12 +166,17 @@ router.post('/admin-login', [
 router.post('/forgot-password', [
   body('email').isEmail().withMessage('Valid email is required')
 ], async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ success: false, errors: errors.array() });
+  }
+
   try {
     const { email } = req.body;
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.status(404).json({ success: false, message: 'No user found with this email' });
+      return res.status(404).json({ success: false, message: 'No user account found with this email address.' });
     }
 
     // Generate reset token
@@ -179,27 +185,42 @@ router.post('/forgot-password', [
     user.resetPasswordExpire = Date.now() + 3600000; // 1 hour
     await user.save();
 
-    // Create reset URL (assuming frontend is running on same host)
-    // For localhost, it would be http://localhost:5000/reset-password.html?token=...
-    const resetUrl = `${req.protocol}://${req.get('host')}/reset-password.html?token=${resetToken}`;
+    // Determine Client Application URL (fallback to referrer host or localhost:5173)
+    let clientHost = 'http://localhost:5173';
+    if (req.get('referer')) {
+      try { clientHost = new URL(req.get('referer')).origin; } catch {}
+    } else if (req.get('origin')) {
+      clientHost = req.get('origin');
+    }
+
+    const resetUrl = `${clientHost}/reset-password?token=${resetToken}`;
 
     const message = `
-      <h1>You requested a password reset</h1>
-      <p>Please make a PUT request to the following link to reset your password:</p>
-      <a href="${resetUrl}" target="_blank">Reset Password Link</a>
-      <p>If you did not request this, please ignore this email.</p>
+      <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #FFE0B2; border-radius: 12px; background-color: #FFFBF0;">
+        <h2 style="color: #E63946; text-align: center;">AnimVerse AI - Password Reset Request</h2>
+        <p>Hello ${user.name},</p>
+        <p>You recently requested to reset your password for your AnimVerse AI account. Click the button below to set a new password:</p>
+        <div style="text-align: center; margin: 30px 0;">
+          <a href="${resetUrl}" target="_blank" style="background: linear-gradient(135deg, #E63946, #C1121F); color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block;">Reset Password</a>
+        </div>
+        <p style="font-size: 0.85rem; color: #666;">Or copy and paste this link into your browser:</p>
+        <p style="font-size: 0.82rem; color: #888; word-break: break-all;"><a href="${resetUrl}">${resetUrl}</a></p>
+        <p style="font-size: 0.85rem; color: #999; margin-top: 30px;">If you did not request a password reset, please ignore this email. This link is valid for 1 hour.</p>
+      </div>
     `;
 
     try {
       await sendEmail({
         email: user.email,
-        subject: 'Password Reset Token - AnimVerse AI',
-        html: message
+        subject: '🔐 Password Reset Request - AnimVerse AI',
+        html: message,
+        resetUrl // Pass URL to email helper for dev logging
       });
 
       res.json({
         success: true,
-        message: 'Password reset link sent to your email!'
+        message: 'Password reset link sent! Please check your email inbox.',
+        resetUrl: process.env.NODE_ENV === 'development' ? resetUrl : undefined
       });
     } catch (error) {
       console.error('Error sending reset email', error);
@@ -207,10 +228,109 @@ router.post('/forgot-password', [
       user.resetPasswordExpire = undefined;
       await user.save();
 
-      return res.status(500).json({ success: false, message: 'Email could not be sent' });
+      return res.status(500).json({ success: false, message: 'Email could not be sent. Please try again later.' });
     }
   } catch (error) {
     res.status(500).json({ success: false, message: 'Server error', error: error.message });
+  }
+});
+
+// @route   POST /api/auth/reset-password
+// @desc    Reset Password with token
+// @access  Public
+router.post('/reset-password', [
+  body('token').notEmpty().withMessage('Reset token is required'),
+  body('newPassword').isLength({ min: 6 }).withMessage('New password must be at least 6 characters')
+], async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ success: false, errors: errors.array() });
+  }
+
+  try {
+    const { token, newPassword } = req.body;
+
+    // Verify token validity
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (err) {
+      return res.status(400).json({ success: false, message: 'Password reset token is invalid or has expired.' });
+    }
+
+    const user = await User.findById(decoded.id);
+    if (!user || user.resetPasswordToken !== token || !user.resetPasswordExpire || user.resetPasswordExpire < Date.now()) {
+      return res.status(400).json({ success: false, message: 'Password reset token is invalid or has expired.' });
+    }
+
+    // Set new password (pre-save hook will hash it automatically)
+    user.password = newPassword;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+    await user.save();
+
+    res.json({
+      success: true,
+      message: 'Password reset successful! You can now sign in with your new password.'
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server error', error: error.message });
+  }
+});
+
+// @route   POST /api/auth/google
+// @desc    Google OAuth Sign-In / Registration
+// @access  Public
+router.post('/google', [
+  body('email').isEmail().withMessage('Valid Google email is required'),
+  body('name').notEmpty().withMessage('Google account name is required')
+], async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ success: false, errors: errors.array() });
+  }
+
+  try {
+    const { email, name, googleId, avatar } = req.body;
+
+    let user = await User.findOne({ email });
+
+    if (user) {
+      // Link Google ID and update avatar if missing
+      if (!user.googleId && googleId) user.googleId = googleId;
+      if (!user.avatar && avatar) user.avatar = avatar;
+      if (!user.isVerified) user.isVerified = true;
+      await user.save();
+    } else {
+      // Create new user account automatically for Google sign-in
+      const randomPassword = 'GoogleAuth_' + Date.now() + Math.random().toString(36).substring(2, 9);
+      user = await User.create({
+        name,
+        email,
+        password: randomPassword,
+        googleId: googleId || 'google_' + Date.now(),
+        avatar: avatar || '',
+        role: 'user',
+        isVerified: true
+      });
+    }
+
+    const token = generateToken(user._id, user.role);
+
+    res.json({
+      success: true,
+      message: 'Google authentication successful!',
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        avatar: user.avatar
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Google authentication failed', error: error.message });
   }
 });
 

@@ -8,14 +8,15 @@ export default function AppShell({ title, children }) {
   return (
     <div style={{
       display: 'flex', minHeight: '100vh',
-      fontFamily: "'Poppins', -apple-system, sans-serif",
-      background: '#F9FAFB',
+      fontFamily: "'Plus Jakarta Sans', sans-serif",
+      background: '#0A0B0E',
+      color: '#F8FAFC'
     }}>
       <AppSidebar collapsed={collapsed} onToggle={() => setCollapsed(c => !c)} />
 
-      <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minWidth: 0 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minWidth: 0, background: '#0A0B0E' }}>
         <AppHeader title={title} />
-        <main style={{ flex: 1, padding: '28px', overflowY: 'auto' }}>
+        <main style={{ flex: 1, padding: '28px 36px', overflowY: 'auto', background: '#0A0B0E' }}>
           {children}
         </main>
       </div>

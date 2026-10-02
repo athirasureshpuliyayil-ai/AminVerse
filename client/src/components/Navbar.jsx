@@ -16,7 +16,7 @@ export default function Navbar() {
       <nav className={`navbar${scrolled ? ' scrolled' : ''}`} id="navbar">
         <div className="navbar-inner">
           <Link to="/" className="navbar-brand">
-            <div style={{width:'44px',height:'44px',background:'linear-gradient(135deg,#E63946,#FF9F1C)',borderRadius:'12px',display:'flex',alignItems:'center',justifyContent:'center',color:'white',fontSize:'1.4rem'}}>🎬</div>
+            <div style={{width:'44px',height:'44px',background:'linear-gradient(135deg,#6366F1,#8B5CF6)',borderRadius:'12px',display:'flex',alignItems:'center',justifyContent:'center',color:'white',fontSize:'1.4rem',boxShadow:'0 4px 16px rgba(99,102,241,0.4)'}}>🎬</div>
             <div className="brand-text">
               <div className="brand-name">AnimVerse AI</div>
               <div className="brand-tagline">Prompt → Animation</div>
@@ -25,6 +25,7 @@ export default function Navbar() {
 
           <ul className="nav-links">
             <li><Link to="/">Home</Link></li>
+            <li><Link to="/radio" style={{ color: '#F59E0B', fontWeight: 800 }}>📻 Radio FM</Link></li>
             <li><a href="#features">Features</a></li>
             <li><a href="#library">Story Library</a></li>
             <li><a href="#how-it-works">How It Works</a></li>

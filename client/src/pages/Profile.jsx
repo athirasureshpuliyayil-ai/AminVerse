@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react'
-import AppSidebar from '../components/AppSidebar'
-import AppHeader from '../components/AppHeader'
+import AppShell from '../components/AppShell'
+import { getUser } from '../utils/authStorage'
 
 export default function Profile() {
   const [user, setUser] = useState({ name: 'User Creator', email: 'user@example.com', role: 'user' })
 
   useEffect(() => {
-    const saved = JSON.parse(localStorage.getItem('animverse_user') || 'null')
+    const saved = getUser()
     if (saved) setUser(saved)
   }, [])
 

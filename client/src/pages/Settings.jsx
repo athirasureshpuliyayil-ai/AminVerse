@@ -1,6 +1,5 @@
 import { useState } from 'react'
-import AppSidebar from '../components/AppSidebar'
-import AppHeader from '../components/AppHeader'
+import AppShell from '../components/AppShell'
 
 export default function Settings() {
   const [theme, setTheme] = useState(localStorage.getItem('animverse_theme') || 'light')

@@ -1,5 +1,4 @@
-import AppSidebar from '../components/AppSidebar'
-import AppHeader from '../components/AppHeader'
+import AppShell from '../components/AppShell'
 
 export default function Notifications() {
   const notificationsList = [

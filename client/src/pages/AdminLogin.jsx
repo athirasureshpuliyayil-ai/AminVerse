@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { setAdminAuth, getAdminToken, getAdminUser } from '../utils/authStorage'
 
 export default function AdminLogin() {
   const navigate = useNavigate()
@@ -11,8 +12,8 @@ export default function AdminLogin() {
   const [loading, setLoading]   = useState(false)
 
   useEffect(() => {
-    const adminToken = localStorage.getItem('animverse_admin_token')
-    const admin      = JSON.parse(localStorage.getItem('animverse_admin') || 'null')
+    const adminToken = getAdminToken()
+    const admin      = getAdminUser()
     if (adminToken && admin) {
       navigate('/admin', { replace: true })
     }
@@ -38,16 +39,14 @@ export default function AdminLogin() {
       const data = await res.json()
 
       if (data.success) {
-        localStorage.setItem('animverse_admin_token', data.token)
-        localStorage.setItem('animverse_admin', JSON.stringify(data.user))
+        setAdminAuth(data.token, data.user, remember)
         showAlert('success', `Welcome back, ${data.user.name}! Access granted.`)
         setTimeout(() => navigate('/admin'), 1200)
       } else {
         // Fallback for admin credentials
         if ((email === 'admin@animverse.ai' || email === 'admin@gmail.com' || email === 'athirapskathu@gmail.com') && (password === 'admin123' || password.length >= 6)) {
           const mockAdmin = { id: 'admin1', name: 'System Admin', email, role: 'admin' }
-          localStorage.setItem('animverse_admin_token', 'mock_admin_token_123')
-          localStorage.setItem('animverse_admin', JSON.stringify(mockAdmin))
+          setAdminAuth('mock_admin_token_123', mockAdmin, remember)
           showAlert('success', 'Admin login successful!')
           setTimeout(() => navigate('/admin'), 1200)
         } else {
@@ -58,8 +57,7 @@ export default function AdminLogin() {
       // Offline / client mock fallback
       if ((email === 'admin@animverse.ai' || email === 'admin@gmail.com' || email === 'athirapskathu@gmail.com') && (password === 'admin123' || password.length >= 6)) {
         const mockAdmin = { id: 'admin1', name: 'System Admin', email, role: 'admin' }
-        localStorage.setItem('animverse_admin_token', 'mock_admin_token_123')
-        localStorage.setItem('animverse_admin', JSON.stringify(mockAdmin))
+        setAdminAuth('mock_admin_token_123', mockAdmin, remember)
         showAlert('success', 'Admin login successful!')
         setTimeout(() => navigate('/admin'), 1200)
       } else {
@@ -104,25 +102,25 @@ export default function AdminLogin() {
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
           <div style={{
             width: 76, height: 76, borderRadius: '50%',
-            background: 'linear-gradient(135deg, #E63946, #FF9F1C)',
+            background: 'linear-gradient(135deg, #6366F1, #8B5CF6)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             fontSize: '2.2rem', margin: '0 auto 20px',
-            boxShadow: '0 12px 36px rgba(230,57,70,0.40)',
+            boxShadow: '0 12px 36px rgba(99,102,241,0.40)',
           }}>
             🛡️
           </div>
 
           <div style={{
             display: 'inline-flex', alignItems: 'center', gap: 8,
-            background: 'rgba(255,214,10,0.12)', border: '1px solid rgba(255,214,10,0.30)',
-            color: '#FFD60A', padding: '6px 16px', borderRadius: 50,
+            background: 'rgba(99,102,241,0.12)', border: '1px solid rgba(99,102,241,0.30)',
+            color: '#818CF8', padding: '6px 16px', borderRadius: 50,
             fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.5px', marginBottom: 16,
           }}>
-            <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#22c55e', boxShadow: '0 0 6px #22c55e' }} />
+            <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#10B981', boxShadow: '0 0 6px #10B981' }} />
             SECURED ADMIN PORTAL
           </div>
 
-          <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'white', margin: '0 0 6px' }}>Admin Access</h1>
+          <h1 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'white', margin: '0 0 6px', letterSpacing: '-0.02em' }}>Admin Access</h1>
           <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.50)', margin: 0 }}>Authorized personnel only. All sessions monitored.</p>
         </div>
 
@@ -130,9 +128,9 @@ export default function AdminLogin() {
         {alert && (
           <div style={{
             padding: '13px 16px', borderRadius: 10, marginBottom: 20, fontSize: '0.88rem', fontWeight: 500,
-            background: alert.type === 'error' ? 'rgba(230,57,70,0.15)' : 'rgba(34,197,94,0.15)',
-            border: `1px solid ${alert.type === 'error' ? 'rgba(230,57,70,0.35)' : 'rgba(34,197,94,0.35)'}`,
-            color: alert.type === 'error' ? '#FF8080' : '#4ade80',
+            background: alert.type === 'error' ? 'rgba(239,68,68,0.15)' : 'rgba(16,185,129,0.15)',
+            border: `1px solid ${alert.type === 'error' ? 'rgba(239,68,68,0.35)' : 'rgba(16,185,129,0.35)'}`,
+            color: alert.type === 'error' ? '#F87171' : '#34D399',
             display: 'flex', alignItems: 'center', gap: 10,
           }}>
             {alert.type === 'error' ? '⚠️' : '✅'} {alert.msg}
@@ -150,7 +148,7 @@ export default function AdminLogin() {
               <input
                 type="email" value={email} onChange={e => setEmail(e.target.value)}
                 placeholder="admin@animverse.ai" style={INPUT}
-                onFocus={e => e.target.style.borderColor = '#E63946'}
+                onFocus={e => e.target.style.borderColor = '#6366F1'}
                 onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.15)'}
               />
             </div>
@@ -165,7 +163,7 @@ export default function AdminLogin() {
               <input
                 type={showPw ? 'text' : 'password'} value={password} onChange={e => setPassword(e.target.value)}
                 placeholder="Enter password" style={{ ...INPUT, paddingRight: 44 }}
-                onFocus={e => e.target.style.borderColor = '#E63946'}
+                onFocus={e => e.target.style.borderColor = '#6366F1'}
                 onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.15)'}
               />
               <button type="button" onClick={() => setShowPw(!showPw)}
@@ -177,19 +175,19 @@ export default function AdminLogin() {
 
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
             <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: '0.82rem', color: 'rgba(255,255,255,0.55)', cursor: 'pointer' }}>
-              <input type="checkbox" checked={remember} onChange={e => setRemember(e.target.checked)} style={{ accentColor: '#E63946' }} />
+              <input type="checkbox" checked={remember} onChange={e => setRemember(e.target.checked)} style={{ accentColor: '#6366F1' }} />
               Keep me signed in
             </label>
-            <a href="#" onClick={e => { e.preventDefault(); alert('Please contact system administrator to reset admin password.') }} style={{ fontSize: '0.82rem', color: '#FFD60A', fontWeight: 600, textDecoration: 'none' }}>
+            <a href="#" onClick={e => { e.preventDefault(); alert('Please contact system administrator to reset admin password.') }} style={{ fontSize: '0.82rem', color: '#818CF8', fontWeight: 600, textDecoration: 'none' }}>
               Forgot password?
             </a>
           </div>
 
           <button type="submit" disabled={loading} style={{
             width: '100%', padding: '16px', borderRadius: 12, border: 'none',
-            background: loading ? '#666' : 'linear-gradient(135deg, #E63946, #FF9F1C)',
+            background: loading ? '#666' : 'linear-gradient(135deg, #6366F1, #4F46E5)',
             color: 'white', fontWeight: 700, fontSize: '0.98rem', cursor: 'pointer',
-            fontFamily: 'inherit', boxShadow: loading ? 'none' : '0 8px 32px rgba(230,57,70,0.40)',
+            fontFamily: 'inherit', boxShadow: loading ? 'none' : '0 8px 32px rgba(99,102,241,0.40)',
             transition: 'transform 0.2s',
           }}>
             {loading ? '⏳ Verifying Credentials...' : '🔑 Access Admin Panel'}

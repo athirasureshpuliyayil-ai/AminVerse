@@ -23,7 +23,7 @@ const UserSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['user', 'admin'],
+    enum: ['user', 'parent', 'adult', 'author', 'admin'],
     default: 'user'
   },
   avatar: {
@@ -47,6 +47,9 @@ const UserSchema = new mongoose.Schema({
 }, {
   timestamps: true
 });
+
+// Indexes for high-speed authentication and admin queries
+UserSchema.index({ email: 1, role: 1 });
 
 // Hash password before saving
 UserSchema.pre('save', async function (next) {

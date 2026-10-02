@@ -1,7 +1,10 @@
-import { Navigate, Outlet } from 'react-router-dom'
+import { Navigate, Outlet, useLocation } from 'react-router-dom'
+import { getToken, getUser } from '../utils/authStorage'
 
 export default function PrivateRoute() {
-  const token = localStorage.getItem('animverse_token')
-  const user = localStorage.getItem('animverse_user')
-  return token && user ? <Outlet /> : <Navigate to="/login" replace />
+  const token = getToken()
+  const user = getUser()
+  const location = useLocation()
+  return token && user ? <Outlet /> : <Navigate to={`/login?redirect=${encodeURIComponent(location.pathname + location.search)}`} replace />
 }
+

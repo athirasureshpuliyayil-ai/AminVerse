@@ -1,40 +1,81 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom'
-
-const NAV = [
-  { icon:'🏠', label:'Dashboard',       path:'/dashboard' },
-  { icon:'🎬', label:'Create Animation',path:'/generate' },
-  { icon:'📚', label:'Story Library',   path:'/stories' },
-  { icon:'🗂️', label:'My Projects',     path:'/projects' },
-  { icon:'📥', label:'Downloads',       path:'/downloads' },
-  { icon:'🔖', label:'Bookmarks',       path:'/bookmarks' },
-  { icon:'🎨', label:'Templates',       path:'/templates' },
-  { icon:'🎮', label:'Relax & Play',    path:'/relax' },
-]
+import { getUser, clearAllAuth } from '../utils/authStorage'
 
 export default function AppSidebar({ collapsed, onToggle }) {
   const location = useLocation()
   const navigate = useNavigate()
-  const user = JSON.parse(localStorage.getItem('animverse_user') || '{}')
+  const user = getUser() || {}
+  const role = user.role || (location.pathname.includes('/parent') ? 'parent' : location.pathname.includes('/adult') ? 'adult' : location.pathname.includes('/admin') ? 'admin' : 'author')
 
   const logout = () => {
-    localStorage.removeItem('animverse_token')
-    localStorage.removeItem('animverse_user')
-    localStorage.removeItem('animverse_admin_token')
-    localStorage.removeItem('animverse_admin')
+    clearAllAuth()
     navigate('/login')
   }
 
   const isActive = (path) => location.pathname === path
 
+  const getRoleNav = () => {
+    if (role === 'parent') {
+      return [
+        { label: 'Parent Dashboard', path: '/dashboard/parent' },
+        { label: 'Story Library 📚', path: '/stories' },
+        { label: 'Animated Videos 🎬', path: '/videos' },
+        { label: 'Kid Animation Studio 🎨', path: '/generate?audience=kids' },
+        { label: 'AnimVerse Radio 📻', path: '/radio' },
+        { label: 'Literature Museum 🏛️', path: '/museum' },
+        { label: 'Story Quizzes 🧩', path: '/stories/1/quiz' },
+        { label: 'Kids Level Arcade 🎮', path: '/relax' },
+        { label: 'Downloads & Audio 📥', path: '/downloads' },
+      ]
+    }
+    if (role === 'adult') {
+      return [
+        { label: 'Adult Lounge', path: '/dashboard/adult' },
+        { label: 'Fiction Novellas 📚', path: '/stories' },
+        { label: 'Animated Videos 🎬', path: '/videos' },
+        { label: 'Cinematic AI Studio 🎥', path: '/generate?audience=adult' },
+        { label: 'AnimVerse Radio 📻', path: '/radio' },
+        { label: 'Literature Museum 🏛️', path: '/museum' },
+        { label: 'Saved Bookmarks 🔖', path: '/bookmarks' },
+        { label: 'Zen Focus Games 🎯', path: '/relax' },
+        { label: 'Story Contest 🏆', path: '/contest' },
+      ]
+    }
+    if (role === 'admin') {
+      return [
+        { label: 'Admin Dashboard', path: '/admin' },
+        { label: 'Story Library 📚', path: '/stories' },
+        { label: 'Animated Videos 🎬', path: '/videos' },
+        { label: 'AnimVerse Radio 📻', path: '/radio' },
+        { label: 'Literature Museum 🏛️', path: '/museum' },
+        { label: 'Story Manager', path: '/admin' },
+        { label: 'Game Manager', path: '/admin' },
+      ]
+    }
+    return [
+      { label: 'Author Studio', path: '/dashboard/author' },
+      { label: 'Story Library 📚', path: '/stories' },
+      { label: 'Animated Videos 🎬', path: '/videos' },
+      { label: 'AI Story Animator 🎥', path: '/generate' },
+      { label: 'AnimVerse Radio 📻', path: '/radio' },
+      { label: 'Literature Museum 🏛️', path: '/museum' },
+      { label: 'Published Stories', path: '/my-stories' },
+      { label: 'Contest Showcase', path: '/contest' },
+    ]
+  }
+
+  const navItems = getRoleNav()
+
   const S = {
     sidebar: {
       width: collapsed ? 72 : 260,
       minHeight: '100vh',
-      background: 'linear-gradient(180deg, #1A1A2E 0%, #16213E 60%, #0F3460 100%)',
+      background: '#0A0B0E',
       display: 'flex', flexDirection: 'column',
       transition: 'width 0.3s cubic-bezier(0.4,0,0.2,1)',
       overflow: 'hidden', flexShrink: 0,
-      boxShadow: '4px 0 20px rgba(0,0,0,0.15)',
+      borderRight: '1px solid rgba(255,255,255,0.08)',
+      boxShadow: '4px 0 24px rgba(0,0,0,0.4)',
       position: 'relative', zIndex: 10,
     },
     logoArea: {
@@ -46,22 +87,22 @@ export default function AppSidebar({ collapsed, onToggle }) {
     },
     brandRow: { display: 'flex', alignItems: 'center', gap: 12, overflow: 'hidden' },
     logoIcon: {
-      width: 40, height: 40, borderRadius: 10, flexShrink: 0,
-      background: 'linear-gradient(135deg,#E63946,#FFD60A)',
+      width: 36, height: 36, borderRadius: 8, flexShrink: 0,
+      background: '#F59E0B',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
-      fontSize: '1.3rem', boxShadow: '0 4px 14px rgba(230,57,70,0.40)',
+      fontSize: '1rem', fontWeight: 900, color: '#0A0B0E'
     },
     brandText: { overflow: 'hidden', whiteSpace: 'nowrap' },
-    brandName: { fontSize: '0.95rem', fontWeight: 800, color: 'white' },
-    brandTag: { fontSize: '0.62rem', color: 'rgba(255,255,255,0.45)', marginTop: 1 },
+    brandName: { fontSize: '0.95rem', fontWeight: 800, color: 'white', letterSpacing: '-0.01em' },
+    brandTag: { fontSize: '0.62rem', color: '#06B6D4', fontWeight: 800, letterSpacing: '1px' },
     toggleBtn: {
-      width: 30, height: 30, borderRadius: 8, background: 'rgba(255,255,255,0.08)',
+      width: 28, height: 28, borderRadius: 6, background: 'rgba(255,255,255,0.08)',
       border: 'none', color: 'rgba(255,255,255,0.6)', cursor: 'pointer', fontSize: '0.85rem',
       display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
     },
     navSection: { padding: '16px 12px', flex: 1, overflowY: 'auto' },
     sectionLabel: {
-      fontSize: '0.65rem', fontWeight: 700, color: 'rgba(255,255,255,0.30)',
+      fontSize: '0.65rem', fontWeight: 800, color: '#64748B',
       textTransform: 'uppercase', letterSpacing: '1.5px',
       padding: collapsed ? '10px 0' : '10px 8px', marginBottom: 4,
       textAlign: collapsed ? 'center' : 'left',
@@ -71,15 +112,13 @@ export default function AppSidebar({ collapsed, onToggle }) {
       display: 'flex', alignItems: 'center', gap: collapsed ? 0 : 12,
       padding: collapsed ? '11px 0' : '11px 14px',
       borderRadius: 10, marginBottom: 4, cursor: 'pointer',
-      background: active ? 'linear-gradient(135deg, rgba(230,57,70,0.85), rgba(193,18,31,0.75))' : 'transparent',
-      border: active ? '1px solid rgba(230,57,70,0.40)' : '1px solid transparent',
-      transition: 'all 0.2s', textDecoration: 'none', justifyContent: collapsed ? 'center' : 'flex-start',
-      boxShadow: active ? '0 4px 12px rgba(230,57,70,0.25)' : 'none',
+      background: active ? 'rgba(245, 158, 11, 0.15)' : 'transparent',
+      border: active ? '1px solid rgba(245, 158, 11, 0.35)' : '1px solid transparent',
+      transition: 'all 0.2s', textDecoration: 'none', justifyContent: collapsed ? 'center' : 'flex-start'
     }),
-    navIcon: { fontSize: '1.15rem', flexShrink: 0 },
     navLabel: (active) => ({
-      fontSize: '0.88rem', fontWeight: active ? 700 : 500,
-      color: active ? 'white' : 'rgba(255,255,255,0.65)',
+      fontSize: '0.88rem', fontWeight: active ? 800 : 500,
+      color: active ? '#F59E0B' : 'rgba(255,255,255,0.70)',
       overflow: 'hidden', whiteSpace: 'nowrap',
     }),
     divider: { height: 1, background: 'rgba(255,255,255,0.07)', margin: '12px 0' },
@@ -92,18 +131,18 @@ export default function AppSidebar({ collapsed, onToggle }) {
       justifyContent: collapsed ? 'center' : 'flex-start',
     },
     avatar: {
-      width: 36, height: 36, borderRadius: '50%', flexShrink: 0,
-      background: 'linear-gradient(135deg,#E63946,#FF9F1C)',
+      width: 34, height: 34, borderRadius: '50%', flexShrink: 0,
+      background: '#F59E0B',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
-      fontSize: '1rem', fontWeight: 700, color: 'white',
+      fontSize: '0.9rem', fontWeight: 800, color: '#0A0B0E'
     },
     userName: { fontSize: '0.85rem', fontWeight: 700, color: 'white', overflow: 'hidden', whiteSpace: 'nowrap' },
-    userRole: { fontSize: '0.68rem', color: 'rgba(255,255,255,0.40)', marginTop: 1 },
+    userRole: { fontSize: '0.68rem', color: '#06B6D4', marginTop: 1, textTransform: 'uppercase', fontWeight: 800 },
     logoutBtn: {
       display: 'flex', alignItems: 'center', gap: collapsed ? 0 : 8,
       marginTop: 10, padding: collapsed ? '9px 0' : '9px 14px',
-      borderRadius: 8, background: 'rgba(230,57,70,0.12)', border: '1px solid rgba(230,57,70,0.25)',
-      color: '#FF8A80', fontWeight: 600, fontSize: '0.82rem', cursor: 'pointer',
+      borderRadius: 8, background: 'rgba(239,68,68,0.10)', border: '1px solid rgba(239,68,68,0.25)',
+      color: '#F87171', fontWeight: 700, fontSize: '0.82rem', cursor: 'pointer',
       transition: 'all 0.2s', width: '100%', fontFamily: 'inherit',
       justifyContent: collapsed ? 'center' : 'flex-start',
     },
@@ -111,7 +150,6 @@ export default function AppSidebar({ collapsed, onToggle }) {
 
   return (
     <aside style={S.sidebar}>
-
       {/* Logo */}
       <div style={S.logoArea}>
         <div style={S.brandRow}>
@@ -119,7 +157,7 @@ export default function AppSidebar({ collapsed, onToggle }) {
           {!collapsed && (
             <div style={S.brandText}>
               <div style={S.brandName}>AnimVerse AI</div>
-              <div style={S.brandTag}>Creative Studio</div>
+              <div style={S.brandTag}>{role.toUpperCase()} WORKSPACE</div>
             </div>
           )}
         </div>
@@ -134,20 +172,17 @@ export default function AppSidebar({ collapsed, onToggle }) {
 
       {/* Navigation */}
       <nav style={S.navSection}>
-        {!collapsed && <span style={S.sectionLabel}>Main Menu</span>}
-        {NAV.map(item => (
-          <Link key={item.path} to={item.path} style={S.navItem(isActive(item.path))}>
-            <span style={S.navIcon}>{item.icon}</span>
+        {!collapsed && <span style={S.sectionLabel}>{role} Workspace</span>}
+        {navItems.map(item => (
+          <Link key={item.path + item.label} to={item.path} style={S.navItem(isActive(item.path))}>
             {!collapsed && <span style={S.navLabel(isActive(item.path))}>{item.label}</span>}
           </Link>
         ))}
 
         <div style={S.divider} />
 
-        {/* Settings & Notifications */}
-        {[{icon:'🔔',label:'Notifications',path:'/notifications'},{icon:'⚙️',label:'Settings',path:'/settings'},{icon:'👤',label:'Profile',path:'/profile'}].map(item => (
+        {[{ label: 'My Profile', path: '/profile' }, { label: 'Settings', path: '/settings' }].map(item => (
           <Link key={item.path} to={item.path} style={S.navItem(isActive(item.path))}>
-            <span style={S.navIcon}>{item.icon}</span>
             {!collapsed && <span style={S.navLabel(isActive(item.path))}>{item.label}</span>}
           </Link>
         ))}
@@ -157,15 +192,14 @@ export default function AppSidebar({ collapsed, onToggle }) {
       <div style={S.userArea}>
         {!collapsed && (
           <div style={S.avatarRow}>
-            <div style={S.avatar}>{(user?.name||'?')[0].toUpperCase()}</div>
+            <div style={S.avatar}>{(user?.name || '?')[0].toUpperCase()}</div>
             <div style={{ overflow: 'hidden' }}>
               <div style={S.userName}>{user?.name || 'User'}</div>
-              <div style={S.userRole}>🎨 Creator</div>
+              <div style={S.userRole}>{role} Mode</div>
             </div>
           </div>
         )}
         <button style={S.logoutBtn} onClick={logout}>
-          <span>🚪</span>
           {!collapsed && 'Logout'}
         </button>
       </div>

@@ -1,11 +1,23 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getUser } from '../utils/authStorage'
 
 export default function AppHeader({ title = 'Dashboard' }) {
   const navigate = useNavigate()
   const [query, setQuery] = useState('')
-  const user = getUser() || {}
+  const [user, setUser] = useState(() => getUser() || {})
+
+  useEffect(() => {
+    const handleUpdate = () => {
+      setUser(getUser() || {})
+    }
+    window.addEventListener('storage', handleUpdate)
+    window.addEventListener('userUpdated', handleUpdate)
+    return () => {
+      window.removeEventListener('storage', handleUpdate)
+      window.removeEventListener('userUpdated', handleUpdate)
+    }
+  }, [])
 
   const S = {
     header: {
